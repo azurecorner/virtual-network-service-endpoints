@@ -13,7 +13,7 @@ New-AzVm `
     -OpenPorts 80,3389
 
 #install powershell az module in the VM
-    Invoke-AzVMRunCommand -ResourceGroupName $resourceGroup -VMName 'DataServer' -CommandId 'RunPowerShellScript' -ScriptString 'Install-Module -Name Az.Account -Scope AllUsers  -Repository PSGallery -Force'
-    Invoke-AzVMRunCommand -ResourceGroupName $resourceGroup -VMName 'DataServer' -CommandId 'RunPowerShellScript' -ScriptString 'Install-Module -Name Az.Storage -Scope AllUsers  -Repository PSGallery -Force'
+    # Invoke-AzVMRunCommand -ResourceGroupName $resourceGroup -VMName 'DataServer' -CommandId 'RunPowerShellScript' -ScriptString 'Install-Module -Name Az.Account -Scope AllUsers  -Repository PSGallery -Force'
+    # Invoke-AzVMRunCommand -ResourceGroupName $resourceGroup -VMName 'DataServer' -CommandId 'RunPowerShellScript' -ScriptString 'Install-Module -Name Az.Storage -Scope AllUsers  -Repository PSGallery -Force'
 
-    Connect-AzAccount
+    # Connect-AzAccount
