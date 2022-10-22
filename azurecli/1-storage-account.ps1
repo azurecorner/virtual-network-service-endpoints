@@ -1,7 +1,7 @@
 $resourceGroup = "virtual-network-service-endpoints"
 $storageAcctName="logcorner07092022"
 $fileShareName="blog-file-share"
-$location="eastus"
+$location="westeurope"
 
 az group create `
   --name $resourceGroup `
