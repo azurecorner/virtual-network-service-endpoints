@@ -44,3 +44,8 @@ mount azure file share
 
 username = storageAccountName
 password = storageAccountKey
+
+
+install Microsoft IIS on the myVMWeb virtual machine
+
+Install-WindowsFeature -name Web-Server -IncludeManagementTools
