@@ -13,7 +13,6 @@ download right click storage account,  and connect to file share
 upload a file and check it in storage account explorer
 
 # 3. CREATE A VIRTUAL NETWORK WITH A WEBAPI SUBNET AND A DATABASE SUBNET 
-
 azurecli/2-virtual-network
 
 # 4. CREATE A SERVICE ENDPOINT
@@ -34,3 +33,14 @@ Create another outbound security rule that denies communication to the internet
 Create a network security group
 Associate the network security group to the public subnet
 Allow access to web api
+
+ # 5. CREATE VIRTUAL MACHINE AND AZURE BASTIO 
+  azurecli/5-virtual-machines
+
+
+# TEST
+mount azure file share
+\\logcorner07092022.file.core.windows.net\blog-file-share
+
+username = storageAccountName
+password = storageAccountKey
