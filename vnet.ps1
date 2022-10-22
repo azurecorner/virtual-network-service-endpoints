@@ -11,9 +11,12 @@ $vnet = @{
 }
 $virtualNetwork = New-AzVirtualNetwork @vnet
 
-Add-AzVirtualNetworkSubnetConfig -Name "DatabaseSubnet" -VirtualNetwork $virtualNetwork -AddressPrefix "10.3.1.0/24"
-Add-AzVirtualNetworkSubnetConfig -Name "WebApiSubnet" -VirtualNetwork $virtualNetwork -AddressPrefix "10.3.2.0/24" -ServiceEndpoint =""
-$virtualNetwork | Set-AzVirtualNetwork
+# Add-AzVirtualNetworkSubnetConfig -Name "DatabaseSubnet" -VirtualNetwork $virtualNetwork -AddressPrefix "10.3.1.0/24"
+# Add-AzVirtualNetworkSubnetConfig -Name "WebApiSubnet" -VirtualNetwork $virtualNetwork -AddressPrefix "10.3.2.0/24" -ServiceEndpoint =""
+# $virtualNetwork | Set-AzVirtualNetwork
+
+az network vnet subnet create -g $resourceGroup --vnet-name $vnetName -n "DatabaseSubnet"  --address-prefixes "10.3.1.0/24" 
+az network vnet subnet create -g $resourceGroup --vnet-name $vnetName -n "WebApiSubnet"  --address-prefixes "10.3.2.0/24" 
 
 #assign the Microsoft.Storage endpoint to the subnet
 az network vnet subnet update `
