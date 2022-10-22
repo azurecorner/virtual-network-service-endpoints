@@ -28,7 +28,8 @@ az network nsg rule create `
   --source-address-prefix "VirtualNetwork" `
   --source-port-range "*" `
   --destination-address-prefix "Storage" `
-  --destination-port-range "*"
+  --destination-port-range "*" `
+  --description "Allow access to Azure Storage"
 
 # Create another outbound security rule that denies communication to the internet
 
@@ -43,8 +44,8 @@ az network nsg rule create `
   --source-address-prefix "VirtualNetwork" `
   --source-port-range "*" `
   --destination-address-prefix "Internet" `
-  --destination-port-range "*"
-
+  --destination-port-range "*"  `
+  --description "Deny access to Internet."
 
 
 
@@ -53,6 +54,8 @@ az network nsg create `
 --resource-group $resourceGroup `
 --name $webApiNetworkSecurityGroupName
 
+# Associate the network security group to the public subnet
+
 az network vnet subnet update `
   --vnet-name $virtualNetworkName `
   --name "WebApiSubnet" `
@@ -60,7 +63,7 @@ az network vnet subnet update `
   --network-security-group $webApiNetworkSecurityGroupName
 
 
-  az network nsg rule create `
+<#   az network nsg rule create `
   --resource-group $resourceGroup `
   --nsg-name $webApiNetworkSecurityGroupName `
   --name "Allow-RDP-All" `
@@ -71,8 +74,9 @@ az network vnet subnet update `
   --source-address-prefix "*" `
   --source-port-range "*" `
   --destination-address-prefix "VirtualNetwork" `
-  --destination-port-range "3389"
+  --destination-port-range "3389" #>
 
+  # Allow access to web api
 
   az network nsg rule create `
   --resource-group $resourceGroup `
@@ -85,4 +89,5 @@ az network vnet subnet update `
   --source-address-prefix "*" `
   --source-port-range "*" `
   --destination-address-prefix "VirtualNetwork" `
-  --destination-port-range 80 443
+  --destination-port-range 80 443 `
+  --description "Allow access to web api"
