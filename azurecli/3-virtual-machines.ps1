@@ -24,7 +24,7 @@ az vm create `
   --name "dataBaseServer"  `
   --vnet-name $virtualNetworkName `
   --subnet $DatabaseSubnet `
-  --public-ip-sku Standard `
+  --public-ip-address '""'`
   --nsg-rule NONE `
   --admin-username 'dbsuperuser' --admin-password 'Password123!'
 
