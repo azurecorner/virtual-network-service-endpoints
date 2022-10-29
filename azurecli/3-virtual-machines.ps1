@@ -10,10 +10,10 @@ az vm create `
   --image "Win2019Datacenter" `
   --name "webApiServer" `
   --vnet-name $virtualNetworkName `
-  --public-ip-address "webApiServerPip" `
-  --public-ip-sku Standard `
   --subnet $WebApiSubnet `
-  --admin-username 'username' --admin-password 'Password123!'
+  --public-ip-sku Standard `
+  --nsg-rule NONE `
+  --admin-username 'websuperuser' --admin-password 'Password123!'
 
 
 # Create a VM in the private subnet (DatabaseSubnet)
@@ -23,18 +23,11 @@ az vm create `
   --image "Win2019Datacenter" `
   --name "dataBaseServer"  `
   --vnet-name $virtualNetworkName `
-  --public-ip-address "dataBaseServerPip" `
-  --public-ip-sku Standard `
   --subnet $DatabaseSubnet `
-  --admin-username 'username' --admin-password 'Password123!'
+  --public-ip-sku Standard `
+  --nsg-rule NONE `
+  --admin-username 'dbsuperuser' --admin-password 'Password123!'
 
-
-  # Create  AzureBastionSubnet
-  az network vnet subnet create `
-  --vnet-name $virtualNetworkName `
-  --resource-group $resourceGroup `
-  --name "AzureBastionSubnet" `
-  --address-prefix 10.0.3.0/26 
 
   # Create a public IP address for Azure Bastion. The public IP is the public IP address the Bastion resource on which RDP/SSH will be accessed (over port 443). The public IP address must be in the same region as the Bastion resource you're creating.
   $publicPip='AzureBastionPip'
