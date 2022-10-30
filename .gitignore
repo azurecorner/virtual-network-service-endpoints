@@ -1,2 +1,7 @@
 dism.log
 /.vs
+/dotnet/.vs
+/dotnet/WebApiSolution/.vs/ProjectEvaluation/webapisolution.metadata.v5.1
+/dotnet/WebApiSolution/.vs
+/dotnet/WebApiSolution/WebApi/bin/Debug/net6.0
+/dotnet/WebApiSolution/WebApi/obj
