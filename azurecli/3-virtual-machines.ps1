@@ -11,7 +11,7 @@ az vm create `
   --name "webApiServer" `
   --vnet-name $virtualNetworkName `
   --subnet $WebApiSubnet `
-  --public-ip-sku Standard `
+  --public-ip-address '""'`
   --nsg-rule NONE `
   --admin-username 'websuperuser' --admin-password 'Password123!'
 
