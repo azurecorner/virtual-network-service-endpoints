@@ -7,7 +7,7 @@ namespace WebApi
     internal class FileService
     {
         // Get the connection string from app settings
-        private const string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=testbloblogcorner;AccountKey=BSkDhIielzaN9g9Kn64WSiuQD7D6JG5z0oC6HmYFn9AOlezPjyvLR2P9lSlVnP+3ZOo6G7H69M8d+AStMpleAg==;EndpointSuffix=core.windows.net";
+        private const string ConnectionString = "";
 
         //-------------------------------------------------
         // Copy file within a directory
