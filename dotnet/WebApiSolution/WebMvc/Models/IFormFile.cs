@@ -8,7 +8,10 @@ public interface IFormFile
     long Length { get; }
     string Name { get; }
     string FileName { get; }
+
     Stream OpenReadStream();
+
     void CopyTo(Stream target);
+
     Task CopyToAsync(Stream target, CancellationToken cancellationToken);
 }
