@@ -5,3 +5,5 @@ dism.log
 /dotnet/WebApiSolution/.vs
 /dotnet/WebApiSolution/WebApi/bin/Debug/net6.0
 /dotnet/WebApiSolution/WebApi/obj
+/dotnet/WebApiSolution/WebMvc/bin/Debug/net6.0
+/dotnet/WebApiSolution/WebMvc/obj
