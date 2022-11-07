@@ -1,18 +1,20 @@
 ﻿using Azure.Storage.Files.Shares;
 using Azure.Storage.Files.Shares.Models;
+using WebApi.Models;
 
-namespace WebApi.Controllers;
+namespace WebApi.Services;
 
-public class PostService : IPostService
+public class FileStorageService : IFileStorageService
 {
     // Get the connection string from app settings
-    private const string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=logcorner07092022;AccountKey=RVk8YFFu+k3K9Zh0kuFi/9RKUBiukKah93AkNNcq6A43R5hEpBz8NAQxQ10wMGg4LCCqt+g1gWP6+ASt2zyV+g==;EndpointSuffix=core.windows.net";
+    private readonly string _connectionString;
 
     private const string ShareName = "blog-file-share";
     private const string FolderName = "CustomLogs";
 
-    public PostService()
+    public FileStorageService(IConfiguration configuration)
     {
+        _connectionString = configuration.GetValue<string>("ConnectionString");
         CreateShareAsync(ShareName, new[] { FolderName });
     }
 
@@ -22,7 +24,7 @@ public class PostService : IPostService
     private async Task CreateShareAsync(string shareName, IEnumerable<string> directories)
     {
         // Instantiate a ShareClient which will be used to create and manipulate the file share
-        ShareClient share = new ShareClient(ConnectionString, shareName);
+        ShareClient share = new ShareClient(_connectionString, shareName);
 
         // Create the share if it doesn't already exist
         await share.CreateIfNotExistsAsync();
@@ -53,9 +55,9 @@ public class PostService : IPostService
         }
     }
 
-    public async Task<PostResponse> CreateFileAsync(string shareName, PostRequest postRequest, string folderName)
+    public async Task<FileResponse> CreateFileAsync(string shareName, FileRequest postRequest, string folderName)
     {
-        ShareClient share = new(ConnectionString, shareName);
+        ShareClient share = new(_connectionString, shareName);
 
         var directory = share.GetDirectoryClient(folderName);
         await using Stream data = postRequest.Image.OpenReadStream();
@@ -64,7 +66,7 @@ public class PostService : IPostService
         await file.CreateAsync(data.Length);
         await file.UploadAsync(data);
 
-        return new PostResponse(file.Uri, $"File {postRequest.Image.FileName} Uploaded Successfully");
+        return new FileResponse(file.Uri, $"File {postRequest.Image.FileName} Uploaded Successfully");
     }
 
     public async Task<List<FileDto>?> ListFilesAsync(string shareName, string folderName)
@@ -72,7 +74,7 @@ public class PostService : IPostService
         // Get the connection string from app settings
 
         // Instatiate a ShareServiceClient
-        ShareServiceClient shareService = new ShareServiceClient(ConnectionString);
+        ShareServiceClient shareService = new ShareServiceClient(_connectionString);
 
         // Get a ShareClient
         ShareClient share = shareService.GetShareClient(shareName);
@@ -91,10 +93,10 @@ public class PostService : IPostService
         }).ToList();
     }
 
-    public async Task<FileDto?> DownloadAsync(string shareName, string folderName, string fileName)
+    public async Task<FileDto?> DownloadFileAsync(string shareName, string folderName, string fileName)
     {
         // Get a reference to the file
-        ShareClient share = new ShareClient(ConnectionString, shareName);
+        ShareClient share = new ShareClient(_connectionString, shareName);
         ShareDirectoryClient directory = share.GetDirectoryClient(folderName);
         ShareFileClient file = directory.GetFileClient(fileName);
 
@@ -113,10 +115,10 @@ public class PostService : IPostService
         return null;
     }
 
-    public async Task DeleteAsync(string shareName, string folderName, string fileName)
+    public async Task DeleteFileAsync(string shareName, string folderName, string fileName)
     {
         // Get a reference to the file
-        ShareClient share = new ShareClient(ConnectionString, shareName);
+        ShareClient share = new ShareClient(_connectionString, shareName);
         ShareDirectoryClient directory = share.GetDirectoryClient(folderName);
         ShareFileClient file = directory.GetFileClient(fileName);
 

@@ -1,20 +1,22 @@
 ﻿using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Models;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PostsController : ControllerBase
+    public class FileStorageController : ControllerBase
     {
         private const string ShareName = "blog-file-share";
         private const string FolderName = "CustomLogs";
 
         // READ THIS ==>  https://codingsonata.com/file-upload-with-data-using-asp-net-core-web-api/
 
-        private readonly IPostService _postService;
+        private readonly IFileStorageService _postService;
 
-        public PostsController(IPostService postService)
+        public FileStorageController(IFileStorageService postService)
         {
             _postService = postService;
         }
@@ -32,7 +34,7 @@ namespace WebApi.Controllers
         [HttpPost]
         [Route("")]
         [RequestSizeLimit(5 * 1024 * 1024)]
-        public async Task<IActionResult> SubmitPost([FromForm] PostRequest postRequest)
+        public async Task<IActionResult> SubmitPost([FromForm] FileRequest postRequest)
         {
             if (string.IsNullOrEmpty(Request.GetMultipartBoundary()))
             {
@@ -47,7 +49,7 @@ namespace WebApi.Controllers
         [HttpGet("download/{filename}")]
         public async Task<IActionResult> Download(string filename)
         {
-            FileDto? file = await _postService.DownloadAsync(ShareName, FolderName, filename);
+            FileDto? file = await _postService.DownloadFileAsync(ShareName, FolderName, filename);
 
             // Check if file was found
             if (file == null)
@@ -63,7 +65,7 @@ namespace WebApi.Controllers
         [HttpDelete("delete/{filename}")]
         public async Task<IActionResult> Delete(string filename)
         {
-            await _postService.DeleteAsync(ShareName, FolderName, filename);
+            await _postService.DeleteFileAsync(ShareName, FolderName, filename);
 
             // File has been successfully deleted
             return Ok();

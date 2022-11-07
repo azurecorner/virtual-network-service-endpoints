@@ -1,4 +1,4 @@
-using WebApi.Controllers;
+using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +8,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddTransient<IPostService, PostService>();
+builder.Services.AddTransient<IFileStorageService, FileStorageService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

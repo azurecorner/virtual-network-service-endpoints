@@ -1,11 +1,11 @@
-﻿namespace WebApi.Controllers;
+﻿namespace WebApi.Models;
 
-public class PostResponse
+public class FileResponse
 {
     private readonly Uri _fileUri;
     private readonly string _status;
 
-    public PostResponse(Uri fileUri, string status)
+    public FileResponse(Uri fileUri, string status)
     {
         _fileUri = fileUri;
         _status = status;

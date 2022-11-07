@@ -1,6 +1,6 @@
-﻿namespace WebApi.Controllers;
+﻿namespace WebApi.Models;
 
-public class PostRequest
+public class FileRequest
 {
     public int UserId { get; set; }
     public string Description { get; set; }

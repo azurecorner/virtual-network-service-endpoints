@@ -6,7 +6,7 @@ namespace WebApi;
 public class BlobService
 {
     // TODO: Add your connection string here
-    private const string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=logcorner07092022;AccountKey=RVk8YFFu+k3K9Zh0kuFi/9RKUBiukKah93AkNNcq6A43R5hEpBz8NAQxQ10wMGg4LCCqt+g1gWP6+ASt2zyV+g==;EndpointSuffix=core.windows.net";
+    private const string ConnectionString = "";
 
     private static readonly string BlobContainerName = "authors";
     private static readonly string BlobName = "thomas.html";
