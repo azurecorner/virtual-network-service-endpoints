@@ -112,4 +112,15 @@ public class PostService : IPostService
 
         return null;
     }
+
+    public async Task DeleteAsync(string shareName, string folderName, string fileName)
+    {
+        // Get a reference to the file
+        ShareClient share = new ShareClient(ConnectionString, shareName);
+        ShareDirectoryClient directory = share.GetDirectoryClient(folderName);
+        ShareFileClient file = directory.GetFileClient(fileName);
+
+        // delete the file
+        await file.DeleteIfExistsAsync();
+    }
 }

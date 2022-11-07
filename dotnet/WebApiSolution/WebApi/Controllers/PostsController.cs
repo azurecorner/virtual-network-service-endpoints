@@ -7,8 +7,6 @@ namespace WebApi.Controllers
     [Route("[controller]")]
     public class PostsController : ControllerBase
     {
-        private const string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=logcorner07092022;AccountKey=RVk8YFFu+k3K9Zh0kuFi/9RKUBiukKah93AkNNcq6A43R5hEpBz8NAQxQ10wMGg4LCCqt+g1gWP6+ASt2zyV+g==;EndpointSuffix=core.windows.net";
-
         private const string ShareName = "blog-file-share";
         private const string FolderName = "CustomLogs";
 
@@ -25,7 +23,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Get()
         {
             // Get all files at the Azure Storage Location and return them
-            List<FileDto>? files = await _postService.ListFilesAsync(ShareName,  FolderName);
+            List<FileDto>? files = await _postService.ListFilesAsync(ShareName, FolderName);
 
             // Returns an empty array if no files are present at the storage container
             return StatusCode(StatusCodes.Status200OK, files);
@@ -46,11 +44,10 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-
         [HttpGet("download/{filename}")]
         public async Task<IActionResult> Download(string filename)
         {
-            FileDto? file = await _postService.DownloadAsync(ShareName,  FolderName, filename);
+            FileDto? file = await _postService.DownloadAsync(ShareName, FolderName, filename);
 
             // Check if file was found
             if (file == null)
@@ -61,6 +58,15 @@ namespace WebApi.Controllers
 
             // File was found, return it to client
             return File(file.Content, file.ContentType, file.Name);
+        }
+
+        [HttpDelete("delete/{filename}")]
+        public async Task<IActionResult> Delete(string filename)
+        {
+            await _postService.DeleteAsync(ShareName, FolderName, filename);
+
+            // File has been successfully deleted
+            return Ok();
         }
     }
 }
