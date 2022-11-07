@@ -2,5 +2,8 @@
 
 public interface IPostService
 {
-    Task SavePostImageAsync(PostRequest postRequest);
+    Task<PostResponse> CreateFileAsync(string shareName, PostRequest postRequest, string folderName);
+    Task<List<FileDto>?> ListFilesAsync(string shareName, string folderName);
+    
+    Task<FileDto?> DownloadAsync(string shareName, string folderName, string fileName);
 }

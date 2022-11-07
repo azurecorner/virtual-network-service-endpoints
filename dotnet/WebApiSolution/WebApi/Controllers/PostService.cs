@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Files.Shares;
+using Azure.Storage.Files.Shares.Models;
 
 namespace WebApi.Controllers;
 
@@ -52,12 +53,7 @@ public class PostService : IPostService
         }
     }
 
-    public async Task SavePostImageAsync(PostRequest postRequest)
-    {
-        await CreateFileAsync(ShareName, postRequest, FolderName);
-    }
-
-    private async Task CreateFileAsync(string shareName, PostRequest postRequest, string folderName)
+    public async Task<PostResponse> CreateFileAsync(string shareName, PostRequest postRequest, string folderName)
     {
         ShareClient share = new(ConnectionString, shareName);
 
@@ -67,5 +63,53 @@ public class PostService : IPostService
         // Upload the file async
         await file.CreateAsync(data.Length);
         await file.UploadAsync(data);
+
+        return new PostResponse(file.Uri, $"File {postRequest.Image.FileName} Uploaded Successfully");
+    }
+
+    public async Task<List<FileDto>?> ListFilesAsync(string shareName, string folderName)
+    {
+        // Get the connection string from app settings
+
+        // Instatiate a ShareServiceClient
+        ShareServiceClient shareService = new ShareServiceClient(ConnectionString);
+
+        // Get a ShareClient
+        ShareClient share = shareService.GetShareClient(shareName);
+
+        Console.WriteLine($"Share: {share.Name}");
+
+        var folder = share.GetDirectoryClient(folderName);
+
+        var files = folder.GetFilesAndDirectories();
+
+        return files.Where(f => !f.IsDirectory).Select(r =>
+        new FileDto
+        {
+            Uri = $"{folder.Uri}/{r.Name}",
+            Name = r.Name
+        }).ToList();
+    }
+
+    public async Task<FileDto?> DownloadAsync(string shareName, string folderName, string fileName)
+    {
+        // Get a reference to the file
+        ShareClient share = new ShareClient(ConnectionString, shareName);
+        ShareDirectoryClient directory = share.GetDirectoryClient(folderName);
+        ShareFileClient file = directory.GetFileClient(fileName);
+
+        if (await file.ExistsAsync())
+        {
+            Console.WriteLine($"File exists: {file.Name}");
+
+            // Download the file
+            ShareFileDownloadInfo download = await file.DownloadAsync();
+
+            Stream fileContent = await file.OpenReadAsync();
+
+            return new FileDto { Content = fileContent, Name = fileName, ContentType = download.ContentType };
+        }
+
+        return null;
     }
 }
