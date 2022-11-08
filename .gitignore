@@ -7,3 +7,10 @@ dism.log
 /dotnet/WebApiSolution/WebApi/obj
 /dotnet/WebApiSolution/WebMvc/bin/Debug/net6.0
 /dotnet/WebApiSolution/WebMvc/obj
+/dotnet/Solution/.vs
+/dotnet/Solution/WebApi/bin/Debug/net6.0
+/dotnet/Solution/WebApi/obj
+/dotnet/Solution/WebMvc/bin/Debug/net6.0
+/dotnet/Solution/WebMvc/obj
+/dotnet/Solution/WebApi/bin/Debug/net7.0
+/dotnet/Solution/WebMvc/bin/Debug/net7.0
