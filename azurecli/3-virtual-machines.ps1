@@ -11,8 +11,9 @@ az vm create `
   --name "webApiServer" `
   --vnet-name $virtualNetworkName `
   --subnet $WebApiSubnet `
-  --public-ip-address '""'`
-  --nsg-rule NONE `
+  --public-ip-address 'webApiServerIP' `
+  --public-ip-sku Standard  `
+  --nsg '""' `
   --admin-username 'websuperuser' --admin-password 'Password123!'
 
 
@@ -25,7 +26,7 @@ az vm create `
   --vnet-name $virtualNetworkName `
   --subnet $DatabaseSubnet `
   --public-ip-address '""'`
-  --nsg-rule NONE `
+  --nsg '""' `
   --admin-username 'dbsuperuser' --admin-password 'Password123!'
 
 

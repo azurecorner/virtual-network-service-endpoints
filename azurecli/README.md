@@ -49,3 +49,10 @@ password = storageAccountKey
 install Microsoft IIS on the myVMWeb virtual machine
 
 Install-WindowsFeature -name Web-Server -IncludeManagementTools
+
+
+
+https://adamtheautomator.com/powershell-iis/
+
+ New-Item -ItemType Directory -Name 'MyWebsite' -Path 'C:\'
+ New-Item -ItemType File -Name 'index.html' -Path 'C:\MyWebsite\'
