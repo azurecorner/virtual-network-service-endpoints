@@ -13,6 +13,7 @@ namespace WebApi.Controllers
         private const string FolderName = "CustomLogs";
 
         // READ THIS ==>  https://codingsonata.com/file-upload-with-data-using-asp-net-core-web-api/
+        //https://blog.christian-schou.dk/how-to-use-azure-blob-storage-with-asp-net-core/
 
         private readonly IFileStorageService _postService;
 

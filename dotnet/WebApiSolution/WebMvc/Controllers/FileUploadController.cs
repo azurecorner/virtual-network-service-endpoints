@@ -4,7 +4,7 @@ namespace WebMvc.Controllers
 {
     public class FileUploadController : Controller
     {
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
