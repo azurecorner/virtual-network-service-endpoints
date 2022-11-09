@@ -14,3 +14,4 @@ dism.log
 /dotnet/Solution/WebMvc/obj
 /dotnet/Solution/WebApi/bin/Debug/net7.0
 /dotnet/Solution/WebMvc/bin/Debug/net7.0
+/azurecli/.vs
