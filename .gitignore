@@ -7,3 +7,6 @@
 /azurecli/.vs
 /dotnet/.vs
 /dotnet/Solution/.vs
+.vs/slnx.sqlite
+.vs/virtual-network-service-endpoints/v17/.wsuo
+.vs/slnx.sqlite
