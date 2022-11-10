@@ -19,8 +19,8 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
     feedsToUse: 'select'
-    restoreDirectory: '$(buildConfiguration)/dotnet/Solution/WebMvc'
+    restoreDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    workingDirectory: '$(buildConfiguration)/dotnet/Solution/WebMvc'
+    workingDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
