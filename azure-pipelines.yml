@@ -17,13 +17,13 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
-    projects: '**/*.csproj'
+    projects: '**/WebMvc.csproj'
     feedsToUse: 'select'
     restoreDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
+    projects: '**/WebMvc.csproj'
     workingDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
 - task: PublishBuildArtifacts@1
   inputs:
