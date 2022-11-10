@@ -6,9 +6,9 @@
 trigger:
 - main
 
-pool:
+pool: LOGCORNER-POOL
 
-  vmImage: windows-latest
+  
 
 variables:
   buildConfiguration: 'Release'
