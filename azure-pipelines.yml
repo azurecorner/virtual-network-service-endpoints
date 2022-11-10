@@ -15,12 +15,7 @@ variables:
 
 steps:
 
-- task: UseDotNet@2
-  displayName: 'Install .NET Core sdk 6.x'
-  inputs:
-    packageType: 'sdk'
-    version: '6.0.x'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
