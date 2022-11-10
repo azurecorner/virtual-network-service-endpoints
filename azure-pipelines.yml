@@ -7,13 +7,19 @@ trigger:
 - main
 
 pool:
+
   vmImage: windows-latest
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: '**/*.csproj'
+    feedsToUse: 'select'
+    restoreDirectory: '$(buildConfiguration)/dotnet/Solution/WebMvc'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
