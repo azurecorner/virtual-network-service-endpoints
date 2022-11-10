@@ -29,3 +29,6 @@ $virtualNetworkName="logcorner-vnet"
     --resource-group $resourceGroup `
     --name "AzureBastionSubnet" `
     --address-prefix 10.0.3.0/26 
+
+
+

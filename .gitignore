@@ -4,3 +4,6 @@
 *.v2
 /dotnet/Solution/.vs/Solution/v17/.suo
 /.vs
+/azurecli/.vs
+/dotnet/.vs
+/dotnet/Solution/.vs
