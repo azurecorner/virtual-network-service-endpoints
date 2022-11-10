@@ -14,6 +14,7 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
@@ -24,7 +25,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/WebMvc.csproj'
-    workingDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
+    workingDirectory: '$(buildConfiguration)'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\dotnet\WebApiSolution\WebMvc'
