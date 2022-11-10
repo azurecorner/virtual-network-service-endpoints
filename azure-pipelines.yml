@@ -20,7 +20,7 @@ steps:
   inputs:
     packageType: 'sdk'
     version: '6.0.x'
-    includePreviewVersions: true
+    installationPath: $(Agent.ToolsDirectory)/dotnet
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
