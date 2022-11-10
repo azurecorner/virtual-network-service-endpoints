@@ -23,4 +23,5 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
+    projects: '**/*.csproj'
     workingDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
