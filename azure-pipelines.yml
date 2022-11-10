@@ -25,3 +25,8 @@ steps:
     command: 'build'
     projects: '**/*.csproj'
     workingDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)\dotnet\WebApiSolution\WebMvc'
+    ArtifactName: 'webmvc'
+    publishLocation: 'Container'
