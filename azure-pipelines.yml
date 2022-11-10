@@ -18,7 +18,9 @@ steps:
 - task: UseDotNet@2
   displayName: 'Install .NET Core sdk 6.x'
   inputs:
-    version: 6.x
+    packageType: 'sdk'
+    version: '6.0.x'
+    includePreviewVersions: true
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
@@ -29,7 +31,7 @@ steps:
   inputs:
     command: 'build'
     projects: '**/WebMvc.csproj'
-    workingDirectory: '$(buildConfiguration)'
+    workingDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\dotnet\WebApiSolution\WebMvc'
