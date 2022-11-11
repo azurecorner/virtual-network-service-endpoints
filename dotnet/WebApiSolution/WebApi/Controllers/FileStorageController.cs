@@ -22,7 +22,7 @@ namespace WebApi.Controllers
             _postService = postService;
         }
 
-        [HttpGet(nameof(Get))]
+        [HttpGet]
         public async Task<IActionResult> Get()
         {
             // Get all files at the Azure Storage Location and return them
@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("")]
+        [Route("upload")]
         [RequestSizeLimit(5 * 1024 * 1024)]
         public async Task<IActionResult> SubmitPost([FromForm] FileRequest postRequest)
         {
