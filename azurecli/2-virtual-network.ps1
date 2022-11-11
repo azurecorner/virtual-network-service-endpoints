@@ -7,7 +7,7 @@ az group create `
   --name $resourceGroup `
   --location $location
 
-# Create a virtual network with a webFrontSubnet subnet and a DatabaseSubnet and a AzureBastionSubnet.
+# Create a virtual network with a webFrontSubnet subnet and a webApiSubnet and a AzureBastionSubnet.
   az network vnet create `
   --name $virtualNetworkName `
   --resource-group $resourceGroup `
@@ -20,11 +20,11 @@ az group create `
   --name "webFrontSubnet" `
   --address-prefix 10.0.1.0/24 
 
-# Create DatabaseSubnet subnet
+# Create webApiSubnet subnet
   az network vnet subnet create `
   --vnet-name $virtualNetworkName `
   --resource-group $resourceGroup `
-  --name "DatabaseSubnet" `
+  --name "webApiSubnet" `
   --address-prefix 10.0.2.0/24 
   
 
@@ -46,7 +46,7 @@ az network vnet subnet create `
 --name "AzureBastionSubnet" `
 --address-prefix 10.1.1.0/26 
 
-# Create DatabaseSubnet subnet
+# Create webApiSubnet subnet
 az network vnet subnet create `
 --vnet-name "management-vnet" `
 --resource-group "virtual-network-service-endpoints-management" `

@@ -20,9 +20,9 @@ azurecli/3-service-endpoint
 
 Ensure that communications with Azure Storage pass through the Service Endpoint. Add outbound rules to allow access to the Storage service but deny all other internet traffic.
 
- assign the Microsoft.Storage endpoint to the subnet DatabaseSubnet
+ assign the Microsoft.Storage endpoint to the subnet webApiSubnet
  Deny all network access to a storage account
- Enable network access from a subnet (DatabaseSubnet)
+ Enable network access from a subnet (webApiSubnet)
 
  # 4. CREATE NETWORK SECURITY GROUP 
 azurecli/4-network-security-group

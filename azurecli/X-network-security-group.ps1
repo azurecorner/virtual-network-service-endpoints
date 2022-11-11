@@ -11,7 +11,7 @@ az network nsg create `
 # Associate the network security group to the Private subnet
 az network vnet subnet update `
   --vnet-name $virtualNetworkName `
-  --name "DatabaseSubnet" `
+  --name "webApiSubnet" `
   --resource-group $resourceGroup `
   --network-security-group $databaseNetworkSecurityGroupName
 
