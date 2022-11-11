@@ -1,17 +1,17 @@
 $resourceGroup = "virtual-network-service-endpoints"
 $virtualNetworkName="logcorner-vnet"
 $DatabaseSubnet="DatabaseSubnet"
-$WebApiSubnet="WebApiSubnet"
+$webFrontSubnet="webFrontSubnet"
 
 # Create a VM in the Public subnet 
 
 az vm create `
   --resource-group $resourceGroup `
   --image "Win2019Datacenter" `
-  --name "webApiServer" `
+  --name "webFrontServer" `
   --vnet-name $virtualNetworkName `
-  --subnet $WebApiSubnet `
-  --public-ip-address 'webApiServerIP' `
+  --subnet $webFrontSubnet `
+  --public-ip-address 'webFrontServerIP' `
   --public-ip-sku Standard  `
   --nsg '""' `
   --admin-username 'websuperuser' --admin-password 'Password123!'
@@ -19,7 +19,7 @@ az vm create `
 
 # Create a VM in the private subnet (DatabaseSubnet)
 
-az vm create `
+<# az vm create `
   --resource-group $resourceGroup `
   --image "Win2019Datacenter" `
   --name "dataBaseServer"  `
@@ -27,8 +27,17 @@ az vm create `
   --subnet $DatabaseSubnet `
   --public-ip-address '""'`
   --nsg '""' `
+  --admin-username 'dbsuperuser' --admin-password 'Password123!' #>
+  az vm create `
+  --resource-group $resourceGroup `
+  --image "Win2019Datacenter" `
+  --name "dataBaseServer"  `
+  --vnet-name $virtualNetworkName `
+  --subnet $DatabaseSubnet `
+  --public-ip-address 'webFrontServerIP' `
+  --public-ip-sku Standard  `
+  --nsg '""' `
   --admin-username 'dbsuperuser' --admin-password 'Password123!'
-
 
   # Create a public IP address for Azure Bastion. The public IP is the public IP address the Bastion resource on which RDP/SSH will be accessed (over port 443). The public IP address must be in the same region as the Bastion resource you're creating.
   $publicPip='AzureBastionPip'

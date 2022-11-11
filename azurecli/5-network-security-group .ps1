@@ -1,10 +1,10 @@
 $resourceGroup = "virtual-network-service-endpoints"
 $virtualNetworkName="logcorner-vnet"
 $databaseNetworkSecurityGroupName="DatabaseSubnetNSG"
-$webApiNetworkSecurityGroupName="WebApiSubnetNSG"
+$webApiNetworkSecurityGroupName="webFrontSubnetNSG"
 
 $DatabaseSubnet="DatabaseSubnet"
-$WebApiSubnet="WebApiSubnet"
+$webFrontSubnet="webFrontSubnet"
 
 # Create a network security group  for database subnet
 az network nsg create `
@@ -60,7 +60,7 @@ az network nsg create `
 
 az network vnet subnet update `
   --vnet-name $virtualNetworkName `
-  --name $WebApiSubnet `
+  --name $webFrontSubnet `
   --resource-group $resourceGroup `
   --network-security-group $webApiNetworkSecurityGroupName
 
