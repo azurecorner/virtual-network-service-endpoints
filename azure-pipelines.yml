@@ -6,33 +6,31 @@
 trigger:
 - main
 
-pool:
-
-  vmImage: windows-latest
+pool: LOGCORNER-POOL
 
 variables:
   buildConfiguration: 'Release'
 
 steps:
-
 - task: UseDotNet@2
-  displayName: 'Install .NET Core sdk 6.x'
   inputs:
     packageType: 'sdk'
-    version: '6.0.x'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+    version: '6.0.403'
 - task: DotNetCoreCLI@2
+  displayName: Restore
   inputs:
     command: 'restore'
-    projects: '**/WebMvc.csproj'
+    projects: 'dotnet/WebApiSolution/WebMvc/WebMvc.csproj'
     feedsToUse: 'select'
-    restoreDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
+    restoreDirectory: '$(buildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: Build
   inputs:
     command: 'build'
-    projects: '**/WebMvc.csproj'
-    workingDirectory: '$(buildConfiguration)/dotnet/WebApiSolution/WebMvc'
+    projects: 'dotnet/WebApiSolution/WebMvc/WebMvc.csproj'
+    workingDirectory: '$(buildConfiguration)'
 - task: PublishBuildArtifacts@1
+  displayName: PublishBuildArtifacts
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)\dotnet\WebApiSolution\WebMvc'
     ArtifactName: 'webmvc'
