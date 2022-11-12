@@ -30,8 +30,8 @@ namespace WebMvc.Controllers
             response.EnsureSuccessStatusCode();
 
             await using var responseStream = await response.Content.ReadAsStreamAsync();
-            var images = await JsonSerializer.DeserializeAsync<List<Image>>(responseStream);
-            return View(new GalleryIndexViewModel(images ?? new List<Image>()));
+            var images = await JsonSerializer.DeserializeAsync<List<fileModel>>(responseStream);
+            return View(images);
         }
 
         // GET: FileStorageController/Details/5
@@ -51,34 +51,33 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddImageViewModel addImageViewModel)
         {
-            try
+            var httpClient = _httpClientFactory.CreateClient("APIClient");
+
+            var request = new HttpRequestMessage(
+                HttpMethod.Post,
+                "/FileStorage/upload");
+
+            var imageFile = addImageViewModel.Files.First();
+
+            await using Stream stream = imageFile.OpenReadStream();
+            var payload = new
             {
-                // take the first(only) file in the Files list
-                var imageFile = addImageViewModel.Files.First();
+                Description = "test description"
+            };
 
-                ImageForCreation imageForCreation = null;
-                if (imageFile.Length > 0)
-                {
-                    using (var fileStream = imageFile.OpenReadStream())
-                    using (var ms = new MemoryStream())
-                    {
-                        fileStream.CopyTo(ms);
-                        imageForCreation = new ImageForCreation(
-                            addImageViewModel.Title, ms.ToArray());
-                        var file = GetFormFile(new FileStreamResult(fileStream, imageFile.ContentType));
-
-                        //
-
-                        //
-                    }
-                }
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+            request.Content = new MultipartFormDataContent
             {
-                return View();
-            }
+                // file
+                { new StreamContent(stream), "Image", imageFile.FileName },
+
+                // payload
+
+                { new StringContent(payload.Description), "Description" }
+            };
+
+            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            response.EnsureSuccessStatusCode();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: FileStorageController/Edit/5
