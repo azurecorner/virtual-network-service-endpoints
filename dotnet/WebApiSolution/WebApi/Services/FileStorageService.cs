@@ -14,8 +14,10 @@ public class FileStorageService : IFileStorageService
 
     public FileStorageService(IConfiguration configuration)
     {
-        _connectionString = configuration.GetValue<string>("ConnectionString");
+        if (configuration != null) _connectionString = configuration.GetValue<string>("ConnectionString");
+#pragma warning disable CS4014
         CreateShareAsync(ShareName, new[] { FolderName });
+#pragma warning restore CS4014
     }
 
     //-------------------------------------------------

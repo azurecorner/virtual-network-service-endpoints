@@ -9,6 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IFileStorageService, FileStorageService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

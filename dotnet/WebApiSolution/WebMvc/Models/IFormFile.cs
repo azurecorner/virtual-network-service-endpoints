@@ -1,6 +1,6 @@
 namespace WebMvc.Models;
 
-public interface IFormFile
+public interface IFormFileCustom
 {
     string ContentType { get; }
     string ContentDisposition { get; }
