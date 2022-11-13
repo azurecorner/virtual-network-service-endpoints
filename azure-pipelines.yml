@@ -10,7 +10,7 @@ variables:
   buildConfiguration: 'Release'
   dotNetFramework: 'net7.0'
   dotNetVersion: '7.0.x'
-  targetRuntime: 'linux-x64'
+  targetRuntime: 'win-x64'
  
 
 # Build the app for .NET 7 framework
