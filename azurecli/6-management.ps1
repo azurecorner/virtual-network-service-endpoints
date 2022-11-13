@@ -2,6 +2,31 @@ $resourceGroup = "virtual-network-service-endpoints-management"
 $virtualNetworkName="management-vnet"
 
 
+#management
+
+az group create `
+  --name "virtual-network-service-endpoints-management" `
+  --location $location
+# 
+az network vnet create `
+--name "management-vnet" `
+--resource-group "virtual-network-service-endpoints-management" `
+--address-prefix 10.1.0.0/16 
+
+# Create webFrontSubnet subnet
+az network vnet subnet create `
+--vnet-name "management-vnet" `
+--resource-group "virtual-network-service-endpoints-management" `
+--name "AzureBastionSubnet" `
+--address-prefix 10.1.1.0/26 
+
+# Create webApiSubnet subnet
+az network vnet subnet create `
+--vnet-name "management-vnet" `
+--resource-group "virtual-network-service-endpoints-management" `
+--name "DevOpsSubnet" `
+--address-prefix 10.1.2.0/24 
+
  az vm create `
   --resource-group $resourceGroup `
   --image "Win2019Datacenter" `

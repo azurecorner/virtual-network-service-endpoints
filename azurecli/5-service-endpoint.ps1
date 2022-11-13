@@ -1,12 +1,14 @@
 $resourceGroup = "virtual-network-service-endpoints"
 $storageAcctName="logcorner07092022"
 $virtualNetworkName="logcorner-vnet"
+$webApiSubnet="webApiSubnet"
+
 
 # assign the Microsoft.Storage endpoint to the subnet
 az network vnet subnet update `
 --vnet-name $virtualNetworkName `
 --resource-group $resourceGroup `
---name "webApiSubnet" `
+--name $webApiSubnet `
 --service-endpoints "Microsoft.Storage"
 
 # Deny all network access to a storage account
@@ -20,6 +22,6 @@ az storage account network-rule add `
   --resource-group $resourceGroup `
   --account-name $storageAcctName `
   --vnet-name $virtualNetworkName `
-  --subnet "webApiSubnet"
+  --subnet $webApiSubnet
 
 
