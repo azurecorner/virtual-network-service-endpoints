@@ -1,37 +1,41 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+#This is a Build Deploy Pipeline for .NET 6 Web App to Azure App Service using Azure DevOps Pipeline
 
 trigger:
 - main
 
-pool: LOGCORNER-POOL
+pool:
+  vmImage: ubuntu-latest
 
 variables:
   buildConfiguration: 'Release'
+  dotNetFramework: 'net7.0'
+  dotNetVersion: '7.0.x'
+  targetRuntime: 'linux-x64'
+ 
 
+# Build the app for .NET 7 framework
 steps:
 - task: UseDotNet@2
   inputs:
-    packageType: 'sdk'
-    version: '7.0.100'
+    version: $(dotNetVersion)
+    includePreviewVersions: true
+
 - task: DotNetCoreCLI@2
-  displayName: Restore
   inputs:
     command: 'restore'
-    projects: 'dotnet/WebApiSolution/WebMvc/WebMvc.csproj'
+    projects: '**/*.csproj'
     feedsToUse: 'select'
-    restoreDirectory: '$(buildConfiguration)'
+    restoreDirectory: 'dotnet/WebApiSolution/WebMvc'
 - task: DotNetCoreCLI@2
-  displayName: Build
   inputs:
     command: 'build'
-    projects: 'dotnet/WebApiSolution/WebMvc/WebMvc.csproj'
-    workingDirectory: '$(buildConfiguration)'
-- task: PublishBuildArtifacts@1
-  displayName: PublishBuildArtifacts
+    projects: '**/*.csproj'
+    workingDirectory: 'dotnet/WebApiSolution/WebMvc'
+
+# Publish it as .NET 7 self-contained application for linux runtime
+- task: DotNetCoreCLI@2
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)\dotnet\WebApiSolution\WebMvc'
-    ArtifactName: 'webmvc'
-    publishLocation: 'Container'
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
