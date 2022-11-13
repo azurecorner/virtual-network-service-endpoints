@@ -1,0 +1,108 @@
+trigger:
+- main
+
+variables:
+  debug: true
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  iISDeploymentType: 'IISWebsite'
+
+stages:
+- stage: Build
+  jobs:
+    - job: Build
+      pool:
+        vmImage: 'windows-latest'
+
+      steps:
+      - task: UseDotNet@2
+        displayName: 'Use .NET 7 framework'
+        inputs:
+          version: $(dotNetVersion)
+          includePreviewVersions: true
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Restore webmvc app'
+        inputs:
+          command: 'restore'
+          projects: '**/WebMvc.csproj'
+          feedsToUse: 'select'
+          restoreDirectory: 'dotnet/WebApiSolution/WebMvc'
+      - task: DotNetCoreCLI@2
+        displayName: 'Build webmvc app'
+        inputs:
+          command: 'build'
+          projects: '**/WebMvc.csproj'
+          workingDirectory: 'dotnet/WebApiSolution/WebMvc'
+
+      # Publish it as .NET 7 self-contained application for linux runtime
+      - task: DotNetCoreCLI@2
+        displayName: 'Publish webmvc app'
+        inputs:
+          command: publish
+          publishWebProjects: True
+          arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+          zipAfterPublish: True
+      # Package the file and uploads them as an artifact of the build
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish Pipeline Artifact'
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)' 
+          artifactName: 'WebMVC'
+
+
+- stage: DeployStaging
+  displayName: 'Deploy to staging'
+  dependsOn: 'Build'
+  condition: succeeded()
+  jobs:
+  - deployment: DeployWeb
+    displayName: Deploy Test API
+    pool:
+      vmImage: 'windows-latest'
+    environment:
+      name: test-stg
+      resourceType: VirtualMachine
+      tags: web
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              path: '$(System.ArtifactsDirectory)'
+              artifactName: 'WebMVC'
+
+          - task: IISWebAppManagementOnMachineGroup@0
+            displayName: 'IIS Web App Manage'
+            inputs:
+              IISDeploymentType: 'IISWebsite'
+              ActionIISWebsite: 'CreateOrUpdateWebsite'
+              WebsiteName: 'TestCloudTestDemo'
+              websitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+              websitePhysicalPathAuth: 'WebsiteUserPassThrough'
+              AddBinding: true
+              protocol: 'http'
+              iPAddress: 'All Unassigned'
+              port: '85'
+              Bindings:
+              CreateOrUpdateAppPoolForWebsite: true
+              AppPoolNameForWebsite: 'TestCloudTestDemo'
+              ParentWebsiteNameForVD: '$(Parameters.WebsiteName)'
+              virtualPathForVD:
+              physicalPathForVD: '%SystemDrive%\inetpub\wwwroot'
+              ParentWebsiteNameForApplication: '$(Parameters.WebsiteName)'
+              VirtualPathForApplication: '$(Parameters.VirtualPathForApplication)'
+              AppPoolName: '$(Parameters.AppPoolName)'
+              appPoolNameForApplication:
+              dotNetVersionForApplication: 'v4.0'
+              pipeLineModeForApplication: 'Integrated'
+              appPoolIdentityForApplication: 'ApplicationPoolIdentity'
+
+          - task: IISWebAppDeploymentOnMachineGroup@0
+            displayName: 'IIS Web App Deploy'
+            inputs:
+              WebSiteName: 'TestCloudTestDemo'
+              package: '$(System.ArtifactsDirectory)\**\*.zip'
+              XmlVariableSubstitution: True
