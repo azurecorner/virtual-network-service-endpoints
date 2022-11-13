@@ -16,17 +16,20 @@ variables:
 # Build the app for .NET 7 framework
 steps:
 - task: UseDotNet@2
+  displayName: 'Use .NET 7 framework'
   inputs:
     version: $(dotNetVersion)
     includePreviewVersions: true
 
 - task: DotNetCoreCLI@2
+  displayName: 'Restore webmvc app'
   inputs:
     command: 'restore'
     projects: '**/WebMvc.csproj'
     feedsToUse: 'select'
     restoreDirectory: 'dotnet/WebApiSolution/WebMvc'
 - task: DotNetCoreCLI@2
+  displayName: 'Build webmvc app'
   inputs:
     command: 'build'
     projects: '**/WebMvc.csproj'
@@ -34,6 +37,7 @@ steps:
 
 # Publish it as .NET 7 self-contained application for linux runtime
 - task: DotNetCoreCLI@2
+  displayName: 'Publish webmvc app'
   inputs:
     command: publish
     publishWebProjects: True
