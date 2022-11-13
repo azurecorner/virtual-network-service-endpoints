@@ -23,13 +23,13 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
-    projects: '**/*.csproj'
+    projects: '**/WebMvc.csproj'
     feedsToUse: 'select'
     restoreDirectory: 'dotnet/WebApiSolution/WebMvc'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
+    projects: '**/WebMvc.csproj'
     workingDirectory: 'dotnet/WebApiSolution/WebMvc'
 
 # Publish it as .NET 7 self-contained application for linux runtime
