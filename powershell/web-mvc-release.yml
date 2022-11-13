@@ -2,10 +2,14 @@ trigger:
 - main
 
 variables:
+  buildConfiguration: 'Release'
+  dotNetFramework: 'net7.0'
+  dotNetVersion: '7.0.x'
+  targetRuntime: 'win-x64'
   debug: true
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  
   iISDeploymentType: 'IISWebsite'
 
 stages:
