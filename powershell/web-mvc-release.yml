@@ -81,28 +81,18 @@ stages:
           - task: IISWebAppManagementOnMachineGroup@0
             displayName: 'IIS Web App Manage'
             inputs:
+              EnableIIS: true
               IISDeploymentType: 'IISWebsite'
               ActionIISWebsite: 'CreateOrUpdateWebsite'
               WebsiteName: 'TestCloudTestDemo'
-              websitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
-              websitePhysicalPathAuth: 'WebsiteUserPassThrough'
+              WebsitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
+              WebsitePhysicalPathAuth: 'WebsiteUserPassThrough'
               AddBinding: true
-              protocol: 'http'
-              iPAddress: 'All Unassigned'
-              port: '85'
-              Bindings:
               CreateOrUpdateAppPoolForWebsite: true
               AppPoolNameForWebsite: 'TestCloudTestDemo'
-              ParentWebsiteNameForVD: '$(Parameters.WebsiteName)'
-              virtualPathForVD:
-              physicalPathForVD: '%SystemDrive%\inetpub\wwwroot'
-              ParentWebsiteNameForApplication: '$(Parameters.WebsiteName)'
-              VirtualPathForApplication: '$(Parameters.VirtualPathForApplication)'
-              AppPoolName: '$(Parameters.AppPoolName)'
-              appPoolNameForApplication:
-              dotNetVersionForApplication: 'v4.0'
-              pipeLineModeForApplication: 'Integrated'
-              appPoolIdentityForApplication: 'ApplicationPoolIdentity'
+              DotNetVersionForWebsite: 'v4.0'
+              PipeLineModeForWebsite: 'Integrated'
+              AppPoolIdentityForWebsite: 'ApplicationPoolIdentity'
 
           - task: IISWebAppDeploymentOnMachineGroup@0
             displayName: 'IIS Web App Deploy'
