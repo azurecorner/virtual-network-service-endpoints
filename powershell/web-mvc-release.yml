@@ -80,7 +80,7 @@ stages:
               EnableIIS: true
               IISDeploymentType: 'IISWebsite'
               ActionIISWebsite: 'CreateOrUpdateWebsite'
-              WebsiteName: 'FrontEndMvc'
+              WebsiteName: 'Default Web Site'
               websitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
               websitePhysicalPathAuth: 'WebsiteUserPassThrough'
               AddBinding: true
@@ -104,6 +104,6 @@ stages:
           - task: IISWebAppDeploymentOnMachineGroup@0
             displayName: 'IIS Web App Deploy'
             inputs:
-              WebSiteName: 'FrontEndMvc'
+              WebSiteName: 'Default Web Site'
               package: '$(System.ArtifactsDirectory)\**\*.zip'
               XmlVariableSubstitution: True
