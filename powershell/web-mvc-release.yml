@@ -68,7 +68,7 @@ stages:
     environment:
       name: test-stg
       resourceType: VirtualMachine
-      tags: web
+      tags: webfront
     strategy:
       runOnce:
         deploy:
