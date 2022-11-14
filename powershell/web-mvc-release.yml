@@ -6,10 +6,6 @@ variables:
   dotNetFramework: 'net7.0'
   dotNetVersion: '7.0.x'
   targetRuntime: 'win-x64'
-  debug: true
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  
   iISDeploymentType: 'IISWebsite'
 
 stages:
@@ -62,7 +58,7 @@ stages:
   condition: succeeded()
   jobs:
   - deployment: DeployWeb
-    displayName: Deploy Test API
+    displayName: Deploy Web FrontEnd
     pool:
       vmImage: 'windows-latest'
     environment:
@@ -83,16 +79,16 @@ stages:
             inputs:
               IISDeploymentType: 'IISWebsite'
               ActionIISWebsite: 'CreateOrUpdateWebsite'
-              WebsiteName: 'TestCloudTestDemo'
+              WebsiteName: 'FrontEndMvc'
               websitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
               websitePhysicalPathAuth: 'WebsiteUserPassThrough'
               AddBinding: true
               protocol: 'http'
               iPAddress: 'All Unassigned'
-              port: '85'
+              port: '80'
               Bindings:
               CreateOrUpdateAppPoolForWebsite: true
-              AppPoolNameForWebsite: 'TestCloudTestDemo'
+              AppPoolNameForWebsite: 'FrontEndMvc'
               ParentWebsiteNameForVD: '$(Parameters.WebsiteName)'
               virtualPathForVD:
               physicalPathForVD: '%SystemDrive%\inetpub\wwwroot'
@@ -107,6 +103,6 @@ stages:
           - task: IISWebAppDeploymentOnMachineGroup@0
             displayName: 'IIS Web App Deploy'
             inputs:
-              WebSiteName: 'TestCloudTestDemo'
+              WebSiteName: 'FrontEndMvc'
               package: '$(System.ArtifactsDirectory)\**\*.zip'
               XmlVariableSubstitution: True
