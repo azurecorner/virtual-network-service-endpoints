@@ -57,12 +57,12 @@ stages:
   dependsOn: 'Build'
   condition: succeeded()
   jobs:
-  - deployment: DeployWeb
-    displayName: Deploy Web FrontEnd
+  - deployment: DeployWebApi
+    displayName: Deploy Web Api
     pool:
       vmImage: 'windows-latest'
     environment:
-      name: test-stg
+      name: staging
       resourceType: VirtualMachine
       tags: webApiServer
     strategy:
