@@ -19,7 +19,7 @@ az vm create `
 
 # Create a VM in the private subnet (webApiSubnet)
 
-<# az vm create `
+az vm create `
   --resource-group $resourceGroup `
   --image "Win2019Datacenter" `
   --name "webApiServer"  `
@@ -27,14 +27,14 @@ az vm create `
   --subnet $webApiSubnet `
   --public-ip-address '""'`
   --nsg '""' `
-  --admin-username 'dbsuperuser' --admin-password 'Password123!' #>
-  az vm create `
-  --resource-group $resourceGroup `
-  --image "Win2019Datacenter" `
-  --name "webApiServer"  `
-  --vnet-name $virtualNetworkName `
-  --subnet $webApiSubnet `
-  --public-ip-address 'webApiServerIP' `
-  --public-ip-sku Standard  `
-  --nsg '""' `
-  --admin-username 'webapisuperuser' --admin-password 'Password123!'
+  --admin-username 'dbsuperuser' --admin-password 'Password123!'
+  # az vm create `
+  # --resource-group $resourceGroup `
+  # --image "Win2019Datacenter" `
+  # --name "webApiServer"  `
+  # --vnet-name $virtualNetworkName `
+  # --subnet $webApiSubnet `
+  # --public-ip-address 'webApiServerIP' `
+  # --public-ip-sku Standard  `
+  # --nsg '""' `
+  # --admin-username 'webapisuperuser' --admin-password 'Password123!'

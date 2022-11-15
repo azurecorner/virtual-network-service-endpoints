@@ -1,6 +1,6 @@
 $resourceGroup = "virtual-network-service-endpoints-management"
 $virtualNetworkName="management-vnet"
-
+$location="westeurope"
 
 #management
 
