@@ -6,7 +6,7 @@ using WebApi.Services;
 namespace WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class FileStorageController : ControllerBase
     {
         private const string ShareName = "blog-file-share";

@@ -62,7 +62,7 @@ stages:
     pool:
       vmImage: 'windows-latest'
     environment:
-      name: test-stg
+      name: staging
       resourceType: VirtualMachine
       tags: webfront
     strategy:
