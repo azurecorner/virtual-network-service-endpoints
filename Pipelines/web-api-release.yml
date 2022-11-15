@@ -23,22 +23,22 @@ stages:
           includePreviewVersions: true
 
       - task: DotNetCoreCLI@2
-        displayName: 'Restore webmvc app'
+        displayName: 'Restore WebApi app'
         inputs:
           command: 'restore'
-          projects: '**/WebMvc.csproj'
+          projects: '**/WebApi.csproj'
           feedsToUse: 'select'
-          restoreDirectory: 'dotnet/WebApiSolution/WebMvc'
+          restoreDirectory: 'dotnet/WebApiSolution/WebApi'
       - task: DotNetCoreCLI@2
-        displayName: 'Build webmvc app'
+        displayName: 'Build WebApi app'
         inputs:
           command: 'build'
-          projects: '**/WebMvc.csproj'
-          workingDirectory: 'dotnet/WebApiSolution/WebMvc'
+          projects: '**/WebApi.csproj'
+          workingDirectory: 'dotnet/WebApiSolution/WebApi'
 
       # Publish it as .NET 7 self-contained application for linux runtime
       - task: DotNetCoreCLI@2
-        displayName: 'Publish webmvc app'
+        displayName: 'Publish WebApi app'
         inputs:
           command: publish
           publishWebProjects: True
@@ -49,7 +49,7 @@ stages:
         displayName: 'Publish Pipeline Artifact'
         inputs:
           targetPath: '$(Build.ArtifactStagingDirectory)' 
-          artifactName: 'WebMVC'
+          artifactName: 'WebApi'
 
 
 - stage: DeployStaging
@@ -64,7 +64,7 @@ stages:
     environment:
       name: test-stg
       resourceType: VirtualMachine
-      tags: webfront
+      tags: webApiServer
     strategy:
       runOnce:
         deploy:
@@ -72,14 +72,15 @@ stages:
           - task: DownloadPipelineArtifact@2
             inputs:
               path: '$(System.ArtifactsDirectory)'
-              artifactName: 'WebMVC'
+              artifactName: 'WebApi'
 
           - task: IISWebAppManagementOnMachineGroup@0
             displayName: 'IIS Web App Manage'
             inputs:
+              EnableIIS: true
               IISDeploymentType: 'IISWebsite'
               ActionIISWebsite: 'CreateOrUpdateWebsite'
-              WebsiteName: 'FrontEndMvc'
+              WebsiteName: 'Default Web Site'
               websitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
               websitePhysicalPathAuth: 'WebsiteUserPassThrough'
               AddBinding: true
@@ -88,7 +89,7 @@ stages:
               port: '80'
               Bindings:
               CreateOrUpdateAppPoolForWebsite: true
-              AppPoolNameForWebsite: 'FrontEndMvc'
+              AppPoolNameForWebsite: 'WebApi'
               ParentWebsiteNameForVD: '$(Parameters.WebsiteName)'
               virtualPathForVD:
               physicalPathForVD: '%SystemDrive%\inetpub\wwwroot'
@@ -103,6 +104,6 @@ stages:
           - task: IISWebAppDeploymentOnMachineGroup@0
             displayName: 'IIS Web App Deploy'
             inputs:
-              WebSiteName: 'FrontEndMvc'
+              WebSiteName: 'Default Web Site'
               package: '$(System.ArtifactsDirectory)\**\*.zip'
               XmlVariableSubstitution: True
