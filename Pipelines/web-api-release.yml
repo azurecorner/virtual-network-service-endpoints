@@ -42,7 +42,7 @@ stages:
         inputs:
           command: 'publish'
           publishWebProjects: true
-          arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+          arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)/WebApi'
           workingDirectory: 'dotnet/WebApiSolution/WebApi'
       # Package the file and uploads them as an artifact of the build
       - task: PublishPipelineArtifact@1
