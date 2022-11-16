@@ -41,9 +41,10 @@ stages:
         displayName: 'Publish webmvc app'
         inputs:
           command: publish
-          publishWebProjects: True
+          publishWebProjects: false
+          projects: '**/WebApi.csproj'
           arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
-          zipAfterPublish: True
+          workingDirectory: 'dotnet/WebApiSolution/WebMvc'
       # Package the file and uploads them as an artifact of the build
       - task: PublishPipelineArtifact@1
         displayName: 'Publish Pipeline Artifact'
@@ -64,7 +65,7 @@ stages:
     environment:
       name: staging
       resourceType: VirtualMachine
-      tags: webfront
+      tags: webfrontserver
     strategy:
       runOnce:
         deploy:
@@ -77,9 +78,10 @@ stages:
           - task: IISWebAppManagementOnMachineGroup@0
             displayName: 'IIS Web App Manage'
             inputs:
+              EnableIIS: true
               IISDeploymentType: 'IISWebsite'
               ActionIISWebsite: 'CreateOrUpdateWebsite'
-              WebsiteName: 'FrontEndMvc'
+              WebsiteName: 'Default Web Site'
               websitePhysicalPath: '%SystemDrive%\inetpub\wwwroot'
               websitePhysicalPathAuth: 'WebsiteUserPassThrough'
               AddBinding: true

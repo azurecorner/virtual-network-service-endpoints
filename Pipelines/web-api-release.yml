@@ -65,7 +65,7 @@ stages:
     environment:
       name: staging
       resourceType: VirtualMachine
-      tags: webApiServer
+      tags: webapiserver
     strategy:
       runOnce:
         deploy:

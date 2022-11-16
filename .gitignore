@@ -1,15 +1,6 @@
-/.vs/**/.vs/
 /**/obj/
 /**/bin/
 *.v2
-/**/.vs/*
+/**/.vs/
 /.vs
-
-/azurecli/.vs
-/dotnet/.vs
-/dotnet/Solution/.vs
-.vs/slnx.sqlite
-.vs/virtual-network-service-endpoints/v17/.wsuo
-.vs/slnx.sqlite
-/dotnet/WebApiSolution/.vs/Solution/FileContentIndex/1adf1c0e-465d-422a-bdeb-cf40194e4720.vsidx
-/dotnet/WebApiSolution/.vs/Solution/FileContentIndex
+/dotnet/WebApiSolution/WebMvc/WebMvc.csproj.user
