@@ -101,10 +101,23 @@ stages:
               dotNetVersionForApplication: 'v4.0'
               pipeLineModeForApplication: 'Integrated'
               appPoolIdentityForApplication: 'ApplicationPoolIdentity'
-
+          - task: IISWebAppManagementOnMachineGroup@0
+            name: 'StopIIS'
+            displayName: 'Stop IIS website '
+            inputs:
+              IISDeploymentType: 'IISWebsite'
+              ActionIISWebsite: 'StopWebsite'
+              StartStopWebsiteName: 'Default Web Site'
           - task: IISWebAppDeploymentOnMachineGroup@0
             displayName: 'IIS Web App Deploy'
             inputs:
               WebSiteName: 'Default Web Site'
               package: '$(System.ArtifactsDirectory)\**\*.zip'
               XmlVariableSubstitution: True
+          - task: IISWebAppManagementOnMachineGroup@0
+            name: 'StartIIS'
+            displayName: 'Start IIS website '               
+            inputs:
+              IISDeploymentType: 'IISWebsite'
+              ActionIISWebsite: 'StartWebsite'
+              StartStopWebsiteName: 'Default Web Site'
