@@ -7,7 +7,7 @@ builder.Services.AddControllersWithViews();
 // create an HttpClient used for accessing the API
 builder.Services.AddHttpClient("APIClient", client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["FileStoargeAPIRoot"] ?? string.Empty);
+    client.BaseAddress = new Uri(builder.Configuration["FileStorageAPIRoot"] ?? string.Empty);
     client.DefaultRequestHeaders.Clear();
     client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
 });
