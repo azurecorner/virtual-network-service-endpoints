@@ -22,7 +22,7 @@ namespace WebMvc.Controllers
 
             var request = new HttpRequestMessage(
                 HttpMethod.Get,
-                "/FileStorage/");
+                "api/FileStorage/");
 
             var response = await httpClient.SendAsync(
                 request, HttpCompletionOption.ResponseHeadersRead);
