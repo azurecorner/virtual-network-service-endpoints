@@ -10,5 +10,7 @@ public interface IFileStorageService
 
     Task<FileDto?> DownloadFileAsync(string shareName, string folderName, string fileName);
 
+    Task<FileDto> DownloadFileAsync(string uri);
+
     Task DeleteFileAsync(string shareName, string folderName, string fileName);
 }

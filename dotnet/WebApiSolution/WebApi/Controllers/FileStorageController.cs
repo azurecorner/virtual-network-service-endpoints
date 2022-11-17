@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿#nullable enable
+using System.Net;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 using WebApi.Services;
@@ -46,16 +48,34 @@ namespace WebApi.Controllers
             return Ok(response);
         }
 
-        [HttpGet("download/{filename}")]
-        public async Task<IActionResult> Download(string filename)
+        //[HttpGet("download/{filename}")]
+        //public async Task<IActionResult> Download(string filename)
+        //{
+        //    FileDto? file = await _postService.DownloadFileAsync(ShareName, FolderName, filename);
+
+        //    // Check if file was found
+        //    if (file == null)
+        //    {
+        //        // Was not, return error message to client
+        //        return StatusCode(StatusCodes.Status500InternalServerError, $"File {filename} could not be downloaded.");
+        //    }
+
+        //    // File was found, return it to client
+        //    return File(file.Content, file.ContentType, file.Name);
+        //}
+
+        [HttpGet("download/{fileuri}")]
+        public async Task<IActionResult> DownloadUri(string fileuri)
         {
-            FileDto? file = await _postService.DownloadFileAsync(ShareName, FolderName, filename);
+            
+            fileuri = WebUtility.UrlDecode(fileuri);
+            FileDto? file = await _postService.DownloadFileAsync(fileuri);
 
             // Check if file was found
             if (file == null)
             {
                 // Was not, return error message to client
-                return StatusCode(StatusCodes.Status500InternalServerError, $"File {filename} could not be downloaded.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"File {fileuri} could not be downloaded.");
             }
 
             // File was found, return it to client

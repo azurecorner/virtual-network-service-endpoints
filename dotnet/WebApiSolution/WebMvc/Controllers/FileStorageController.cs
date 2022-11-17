@@ -6,20 +6,19 @@ namespace WebMvc.Controllers
     //https://brokul.dev/sending-files-and-additional-data-using-httpclient-in-net-core
     public class FileStorageController : Controller
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        private HttpClient HttpClient { get; }
 
         public FileStorageController(IHttpClientFactory httpClientFactory)
         {
-            _httpClientFactory = httpClientFactory ??
-                                 throw new ArgumentNullException(nameof(httpClientFactory));
+            var httpClientInstance = httpClientFactory ??
+                                  throw new ArgumentNullException(nameof(httpClientFactory));
+            HttpClient = httpClientInstance.CreateClient("APIClient");
         }
 
         // GET: FileStorageController
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            var httpClient = _httpClientFactory.CreateClient("APIClient");
-
-            var response = await httpClient.GetAsync("api/FileStorage/", HttpCompletionOption.ResponseHeadersRead);
+            var response = await HttpClient.GetAsync("api/FileStorage/", HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
@@ -45,8 +44,6 @@ namespace WebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AddImageViewModel addImageViewModel)
         {
-            var httpClient = _httpClientFactory.CreateClient("APIClient");
-
             var request = new HttpRequestMessage(
                 HttpMethod.Post,
                 "api/FileStorage/upload");
@@ -69,13 +66,13 @@ namespace WebMvc.Controllers
                 { new StringContent(payload.Description), "Description" }
             };
             // use it : https://learn.microsoft.com/en-us/aspnet/web-api/overview/advanced/calling-a-web-api-from-a-net-client
-            var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
+            var response = await HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
             return RedirectToAction(nameof(Index));
         }
 
         // GET: FileStorageController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
             return View();
         }
@@ -83,7 +80,7 @@ namespace WebMvc.Controllers
         // POST: FileStorageController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
@@ -96,7 +93,7 @@ namespace WebMvc.Controllers
         }
 
         // GET: FileStorageController/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             return View();
         }
@@ -104,7 +101,7 @@ namespace WebMvc.Controllers
         // POST: FileStorageController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
@@ -120,6 +117,17 @@ namespace WebMvc.Controllers
         {
             using var fs = fsr.FileStream;
             return new FormFile(fs, 0, fs.Length, "name", fsr.FileDownloadName);
+        }
+
+        public async Task<IActionResult> Download(string id)
+        {
+            var response = await HttpClient.GetAsync($"api/FileStorage/download/{id}", HttpCompletionOption.ResponseHeadersRead);
+
+            response.EnsureSuccessStatusCode();
+
+            var result = await response.Content.ReadFromJsonAsync<List<fileModel>>();
+
+            return View(result);
         }
     }
 }

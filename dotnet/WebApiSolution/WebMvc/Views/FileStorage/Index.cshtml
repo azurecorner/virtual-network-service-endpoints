@@ -1,31 +1,50 @@
-﻿@model IEnumerable< fileModel>
+﻿@model IEnumerable<WebMvc.Models.fileModel>
 
-<div class="bottomMarginDefault">
-</div>
-<div>
-    <div >
-        <a class="nav-link text-dark" asp-area="" asp-controller="FileStorage" asp-action="Create">Add an Image</a>
-    </div>
-</div>
-<div class="container">
-      <div class="row">
-    @foreach (var item in Model)
-    {
-       <div class="pull-left col-md-4">            
-            <div>
-              @*  <img class="thumbnailImage" src="@("https://localhost:7075/images/" + item.FileName)" />*@
-            </div>
-            <div>
-                <div class="h6 topMarginSmall">@item.Uri</div>
-                <div class="h6 topMarginSmall">@item.Name</div>
-                <div class="h6 topMarginSmall">@item.Content</div>
-                    <div class="h6 topMarginSmall">@item.ContentType</div>
-                <div class="bottomMarginDefault">
-                        <a asp-action="EditImage" asp-controller="FileStorage" asp-route-id="@item.Uri">Edit title</a> |
-                        <a asp-action="DeleteImage" asp-controller="FileStorage" asp-route-id="@item.Uri">Delete image</a>
-                </div>
-            </div>
-        </div>
-    }
-    </div>
-</div> 
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Uri)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.ContentType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Uri)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ContentType)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new {  id=item.Uri }) |
+                    @Html.ActionLink("Download", "Download", new { id=item.Uri }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.Uri})
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

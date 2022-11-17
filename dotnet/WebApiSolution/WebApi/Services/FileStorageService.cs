@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Files.Shares;
 using Azure.Storage.Files.Shares.Models;
+using System.Security.Cryptography.X509Certificates;
 using WebApi.Models;
 
 namespace WebApi.Services;
@@ -100,6 +101,31 @@ public class FileStorageService : IFileStorageService
         // Get a reference to the file
         ShareClient share = new ShareClient(_connectionString, shareName);
         ShareDirectoryClient directory = share.GetDirectoryClient(folderName);
+        ShareFileClient file = directory.GetFileClient(fileName);
+
+        if (await file.ExistsAsync())
+        {
+            Console.WriteLine($"File exists: {file.Name}");
+
+            // Download the file
+            ShareFileDownloadInfo download = await file.DownloadAsync();
+
+            Stream fileContent = await file.OpenReadAsync();
+
+            return new FileDto { Content = fileContent, Name = fileName, ContentType = download.ContentType };
+        }
+
+        return null;
+    }
+
+    public async Task<FileDto> DownloadFileAsync(string uri)
+    {
+        // Get a reference to the file
+        ShareClient share = new ShareClient(_connectionString, ShareName);
+        ShareDirectoryClient directory = share.GetDirectoryClient(FolderName);
+
+        
+        string fileName  = Path.GetFileName(uri);
         ShareFileClient file = directory.GetFileClient(fileName);
 
         if (await file.ExistsAsync())
