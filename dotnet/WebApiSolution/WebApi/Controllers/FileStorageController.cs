@@ -34,7 +34,6 @@ namespace WebApi.Controllers
 
         [HttpPost]
         [Route("upload")]
-        //[RequestSizeLimit(5 * 1024 * 1024)]
         public async Task<IActionResult> SubmitPost([FromForm] FileRequest postRequest)
         {
             if (string.IsNullOrEmpty(Request.GetMultipartBoundary()))

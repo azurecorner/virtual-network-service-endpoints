@@ -1,5 +1,4 @@
-﻿
-namespace WebMvc.Models
+﻿namespace WebMvc.Models
 {
     //public class Image
     //{

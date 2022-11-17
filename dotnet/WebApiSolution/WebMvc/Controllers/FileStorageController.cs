@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 using WebMvc.Models;
 
 namespace WebMvc.Controllers
@@ -20,18 +19,13 @@ namespace WebMvc.Controllers
         {
             var httpClient = _httpClientFactory.CreateClient("APIClient");
 
-            var request = new HttpRequestMessage(
-                HttpMethod.Get,
-                "api/FileStorage/");
-
-            var response = await httpClient.SendAsync(
-                request, HttpCompletionOption.ResponseHeadersRead);
+            var response = await httpClient.GetAsync("api/FileStorage/", HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
-            await using var responseStream = await response.Content.ReadAsStreamAsync();
-            var images = await JsonSerializer.DeserializeAsync<List<fileModel>>(responseStream);
-            return View(images);
+            var result = await response.Content.ReadFromJsonAsync<List<fileModel>>();
+
+            return View(result);
         }
 
         // GET: FileStorageController/Details/5
@@ -55,7 +49,7 @@ namespace WebMvc.Controllers
 
             var request = new HttpRequestMessage(
                 HttpMethod.Post,
-                "/FileStorage/upload");
+                "api/FileStorage/upload");
 
             var imageFile = addImageViewModel.Files.First();
 
@@ -74,7 +68,7 @@ namespace WebMvc.Controllers
 
                 { new StringContent(payload.Description), "Description" }
             };
-
+            // use it : https://learn.microsoft.com/en-us/aspnet/web-api/overview/advanced/calling-a-web-api-from-a-net-client
             var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
             response.EnsureSuccessStatusCode();
             return RedirectToAction(nameof(Index));
