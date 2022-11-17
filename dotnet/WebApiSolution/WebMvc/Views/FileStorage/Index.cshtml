@@ -40,9 +40,9 @@
                 @Html.DisplayFor(modelItem => item.ContentType)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new {  id=item.Uri }) |
-                    @Html.ActionLink("Download", "Download", new { id=item.Uri }) |
-                    @Html.ActionLink("Delete", "Delete", new { id=item.Uri})
+                    @Html.ActionLink("Edit", "Edit", new {  uri=item.Uri }) |
+                    @Html.ActionLink("Download", "Download", new { uri=item.Uri }) |
+                    @Html.ActionLink("Delete", "Delete", new { uri=item.Uri})
             </td>
         </tr>
 }

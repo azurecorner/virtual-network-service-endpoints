@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WebMvc.Models;
 
 namespace WebMvc.Controllers
@@ -119,15 +120,18 @@ namespace WebMvc.Controllers
             return new FormFile(fs, 0, fs.Length, "name", fsr.FileDownloadName);
         }
 
-        public async Task<IActionResult> Download(string id)
+        public async Task<IActionResult> Download(string uri)
         {
-            var response = await HttpClient.GetAsync($"api/FileStorage/download/{id}", HttpCompletionOption.ResponseHeadersRead);
+            uri = WebUtility.UrlEncode(uri);
+            var response = await HttpClient.GetAsync($"api/FileStorage/download/{uri}", HttpCompletionOption.ResponseHeadersRead);
 
             response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadFromJsonAsync<List<fileModel>>();
+            var contentDisposition = response.Content.Headers.ContentDisposition;
+            var contentType = response.Content.Headers.ContentType?.MediaType ?? string.Empty;
+            var content = await response.Content.ReadAsByteArrayAsync();
 
-            return View(result);
+            return File(content, contentType, contentDisposition?.FileNameStar);
         }
     }
 }

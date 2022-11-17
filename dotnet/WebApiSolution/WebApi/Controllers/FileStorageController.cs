@@ -1,7 +1,8 @@
 ﻿#nullable enable
-using System.Net;
+
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using WebApi.Models;
 using WebApi.Services;
 
@@ -67,8 +68,8 @@ namespace WebApi.Controllers
         [HttpGet("download/{fileuri}")]
         public async Task<IActionResult> DownloadUri(string fileuri)
         {
-            
             fileuri = WebUtility.UrlDecode(fileuri);
+
             FileDto? file = await _postService.DownloadFileAsync(fileuri);
 
             // Check if file was found
