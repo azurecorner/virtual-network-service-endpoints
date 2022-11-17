@@ -1,6 +1,5 @@
 ﻿using Azure.Storage.Files.Shares;
 using Azure.Storage.Files.Shares.Models;
-using System.Security.Cryptography.X509Certificates;
 using WebApi.Models;
 
 namespace WebApi.Services;
@@ -124,8 +123,7 @@ public class FileStorageService : IFileStorageService
         ShareClient share = new ShareClient(_connectionString, ShareName);
         ShareDirectoryClient directory = share.GetDirectoryClient(FolderName);
 
-        
-        string fileName  = Path.GetFileName(uri);
+        string fileName = Path.GetFileName(uri);
         ShareFileClient file = directory.GetFileClient(fileName);
 
         if (await file.ExistsAsync())
