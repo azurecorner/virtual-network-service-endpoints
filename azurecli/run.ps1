@@ -8,6 +8,8 @@ $location="westeurope"
 ############  IMPORT MODULES ######################
 Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewStorageAccount.ps1"
 Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewVirtualNetwork.ps1"
+Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewVirtualMachine.ps1"
+
 #
 
 az group create `
@@ -20,9 +22,9 @@ Write-Host "Current Working Directory: $curDir"
 <# Get-ChildItem -Path "$curDir/modules" -Include *.ps1  | Import-Module #>
   
 # Create storage account
- $ConnectionString = NewStorageAccount -resourceGroupName $resourceGroupName -storageAccountName $storageAccountName -fileShareName $fileShareName
+ <# $ConnectionString = NewStorageAccount -resourceGroupName $resourceGroupName -storageAccountName $storageAccountName -fileShareName $fileShareName
  Write-Host "ConnectionString = $($ConnectionString)" -ForegroundColor Green
- 
+  #>
  
 $virtualNetworkName="logcorner-vnet"
 $addressPrefix     = "10.0.0.0/16"
@@ -38,10 +40,28 @@ $subnets = @"
   }
 ]
 "@
-
-$logcornerVnet = NewVirtualNetwork -resourceGroupName $resourceGroupName `
+# CREATE VIRTUAL NEtWORK 
+<# $logcornerVnet = NewVirtualNetwork -resourceGroupName $resourceGroupName `
                   -virtualNetworkName $virtualNetworkName `
                   -addressPrefix $addressPrefix `
-                  -subnets $subnets
+                  -subnets $subnets 
                 
-Write-Host "logcornerVnetId = $($logcornerVnet)" -ForegroundColor Green
+Write-Host "logcornerVnetId = $($logcornerVnet)" -ForegroundColor Green #>
+
+# CREATE VIRTUAL MACHINE
+
+$resourceGroupName = "virtual-network-service-endpoints"
+$subnetName="webApiSubnet"
+$virtualMachineName ="webApiServer"
+$image = "Win2019Datacenter"
+$adminUsername = "webmvcsuperuser"
+$adminPassword = "Password123!" | ConvertTo-SecureString -AsPlainText -Force
+$webApiServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupName `
+                -virtualMachineName $virtualMachineName `
+                -virtualNetworkName $virtualNetworkName `
+                -subnetName  $subnetName `
+                -image $image `
+                -adminUsername $adminUsername `
+                -adminPassword $adminPassword
+
+Write-Host "logcornerVnetId = $($webApiServerObjectId)" -ForegroundColor Green
