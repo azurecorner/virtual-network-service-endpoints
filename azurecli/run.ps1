@@ -9,7 +9,7 @@ $location="westeurope"
 Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewStorageAccount.ps1"
 Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewVirtualNetwork.ps1"
 Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewVirtualMachine.ps1"
-
+Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewNetworkSecurityGroup.ps1"
 #
 
 az group create `
@@ -68,7 +68,7 @@ Write-Host "webApiServerObjectId = $($webApiServerObjectId)" -ForegroundColor Gr
 
 # CREATE VIRTUAL MACHINE  WEB FRONT END 
 
-$subnetName="webFrontSubnet"
+<# $subnetName="webFrontSubnet"
 $virtualMachineName ="webFrontServer"
 $image = "Win2019Datacenter"
 $adminUsername = "webfrontsuperuser"
@@ -84,5 +84,13 @@ $webFrontServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupNa
                 -publicIpName $publicIpName
 
 Write-Host "webFrontServerObjectId = $($webFrontServerObjectId)" -ForegroundColor Green
+ #>
 
+# ASSIGN NSG TO  VIRTUAL MACHINE  WEB API 
+$webApiSubnetNSG="webApiSubnetNSG"
+$webApiSubnet="webApiSubnet"
 
+NewNetworkSecurityGroup  -resourceGroupName  $resourceGroupName `
+-virtualNetworkName  $virtualNetworkName `
+-subnetName $webApiSubnet `
+-networkSecurityGroupName $webApiSubnetNSG

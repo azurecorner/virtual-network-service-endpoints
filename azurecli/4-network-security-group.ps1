@@ -1,7 +1,7 @@
 $resourceGroup = "virtual-network-service-endpoints"
 $virtualNetworkName="logcorner-vnet"
-$databaseNetworkSecurityGroupName="webApiSubnetNSG"
-$webApiNetworkSecurityGroupName="webFrontSubnetNSG"
+$webApiSubnetNSG="webApiSubnetNSG"
+$webFrontSubnetNSG="webFrontSubnetNSG"
 
 $webApiSubnet="webApiSubnet"
 $webFrontSubnet="webFrontSubnet"
@@ -9,20 +9,20 @@ $webFrontSubnet="webFrontSubnet"
 # Create a network security group  for database subnet
 az network nsg create `
   --resource-group $resourceGroup `
-  --name $databaseNetworkSecurityGroupName
+  --name $webApiSubnetNSG
 
 # Associate the network security group to the Private subnet  (database subnet)
 az network vnet subnet update `
   --vnet-name $virtualNetworkName `
   --name $webApiSubnet `
   --resource-group $resourceGroup `
-  --network-security-group $databaseNetworkSecurityGroupName
+  --network-security-group $webApiSubnetNSG
 
 # rule that follows allows outbound access to the public IP addresses assigned to the Azure Storage service:
 
 az network nsg rule create `
   --resource-group $resourceGroup `
-  --nsg-name $databaseNetworkSecurityGroupName `
+  --nsg-name $webApiSubnetNSG `
   --name "Allow-Storage-All" `
   --access Allow `
   --protocol "*" `
@@ -38,7 +38,7 @@ az network nsg rule create `
 
 az network nsg rule create `
   --resource-group $resourceGroup `
-  --nsg-name $databaseNetworkSecurityGroupName `
+  --nsg-name $webApiSubnetNSG `
   --name "Deny-Internet-All" `
   --access Deny `
   --protocol "*" `
@@ -54,7 +54,7 @@ az network nsg rule create `
   # Create a network security group for web api subnet
 az network nsg create `
 --resource-group $resourceGroup `
---name $webApiNetworkSecurityGroupName
+--name $webFrontSubnetNSG
 
 # Associate the network security group to the public subnet
 
@@ -62,13 +62,13 @@ az network vnet subnet update `
   --vnet-name $virtualNetworkName `
   --name $webFrontSubnet `
   --resource-group $resourceGroup `
-  --network-security-group $webApiNetworkSecurityGroupName
+  --network-security-group $webFrontSubnetNSG
 
   # Allow access to web api
 
   az network nsg rule create `
   --resource-group $resourceGroup `
-  --nsg-name $webApiNetworkSecurityGroupName `
+  --nsg-name $webFrontSubnetNSG `
   --name "Allow-Web-All" `
   --access Allow `
   --protocol Tcp `
