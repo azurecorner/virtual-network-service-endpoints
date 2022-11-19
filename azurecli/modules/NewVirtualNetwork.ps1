@@ -1,5 +1,6 @@
 Function NewVirtualNetwork
 {
+  
     Param
     (
       [parameter(Mandatory=$true)]
@@ -29,6 +30,6 @@ Function NewVirtualNetwork
     }
 
   $vnet =  $(az network vnet show --resource-group $resourceGroupName --name $virtualNetworkName) | ConvertFrom-Json
-  Return $vnet
+  return $vnet
  
 }

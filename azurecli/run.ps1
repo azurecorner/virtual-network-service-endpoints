@@ -41,16 +41,15 @@ $subnets = @"
 ]
 "@
 # CREATE VIRTUAL NEtWORK 
-<# $logcornerVnet = NewVirtualNetwork -resourceGroupName $resourceGroupName `
+<#  $logcornerVnet = NewVirtualNetwork -resourceGroupName $resourceGroupName `
                   -virtualNetworkName $virtualNetworkName `
                   -addressPrefix $addressPrefix `
                   -subnets $subnets 
                 
-Write-Host "logcornerVnetId = $($logcornerVnet)" -ForegroundColor Green #>
+Write-Host "logcornerVnetId = $($logcornerVnet)" -ForegroundColor Green  #>
 
 # CREATE VIRTUAL MACHINE
 
-$resourceGroupName = "virtual-network-service-endpoints"
 $subnetName="webApiSubnet"
 $virtualMachineName ="webApiServer"
 $image = "Win2019Datacenter"
@@ -64,4 +63,4 @@ $webApiServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupName
                 -adminUsername $adminUsername `
                 -adminPassword $adminPassword
 
-Write-Host "logcornerVnetId = $($webApiServerObjectId)" -ForegroundColor Green
+Write-Host "webApiServerObjectId = $($webApiServerObjectId)" -ForegroundColor Green

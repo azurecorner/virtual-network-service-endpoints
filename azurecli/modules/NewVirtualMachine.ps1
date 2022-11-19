@@ -1,5 +1,6 @@
 Function NewVirtualMachine
 {
+    [OutputType([String])]
     Param
     (
       [parameter(Mandatory=$true)]
@@ -16,25 +17,30 @@ Function NewVirtualMachine
       [string]$adminUsername,
       [parameter(Mandatory=$true)]
       [securestring]$adminPassword
-    )
+    ) 
 # Create a VM in the Public subnet 
+  . {
+    az vm create `
+      --resource-group $resourceGroupName `
+      --image $image `
+      --name $virtualMachineName `
+      --vnet-name $virtualNetworkName `
+      --subnet $SubnetName `
+      --public-ip-address '""' `
+      --nsg '""' `
+      --admin-username $adminUsername --admin-password $adminPassword
 
-az vm create `
-  --resource-group $resourceGroupName `
-  --image $image `
-  --name $virtualMachineName `
-  --vnet-name $virtualNetworkName `
-  --subnet $SubnetName `
-  --public-ip-address '""' `
-  --nsg '""' `
-  --admin-username $adminUsername --admin-password $adminPassword
+      $id =(az vm show --name $virtualMachineName `
+      --resource-group $resourceGroupName `
+      --query 'networkProfile.networkInterfaces[].id' `
+      --output tsv) 
 
-  $id =(az vm show --name $virtualMachineName `
-  --resource-group $resourceGroupName `
-  --query 'networkProfile.networkInterfaces[].id' `
-  --output tsv)
+      $Return = $id
 
-  Write-Host $id
-
-  Return $id
+      
+      Write-Host  $Return
+      Return 
+  
+} | Out-Null
+Return $Return
 }
