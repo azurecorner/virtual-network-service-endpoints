@@ -48,12 +48,12 @@ $subnets = @"
                 
 Write-Host "logcornerVnetId = $($logcornerVnet)" -ForegroundColor Green  #>
 
-# CREATE VIRTUAL MACHINE
+# CREATE VIRTUAL MACHINE  WEB API 
 
-$subnetName="webApiSubnet"
+<# $subnetName="webApiSubnet"
 $virtualMachineName ="webApiServer"
 $image = "Win2019Datacenter"
-$adminUsername = "webmvcsuperuser"
+$adminUsername = "webapisuperuser"
 $adminPassword = "Password123!" | ConvertTo-SecureString -AsPlainText -Force
 $webApiServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupName `
                 -virtualMachineName $virtualMachineName `
@@ -64,3 +64,25 @@ $webApiServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupName
                 -adminPassword $adminPassword
 
 Write-Host "webApiServerObjectId = $($webApiServerObjectId)" -ForegroundColor Green
+ #>
+
+# CREATE VIRTUAL MACHINE  WEB FRONT END 
+
+$subnetName="webFrontSubnet"
+$virtualMachineName ="webFrontServer"
+$image = "Win2019Datacenter"
+$adminUsername = "webfrontsuperuser"
+$adminPassword = "Password123!" | ConvertTo-SecureString -AsPlainText -Force
+$publicIpName = "webFrontServerIP"
+$webFrontServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupName `
+                -virtualMachineName $virtualMachineName `
+                -virtualNetworkName $virtualNetworkName `
+                -subnetName  $subnetName `
+                -image $image `
+                -adminUsername $adminUsername `
+                -adminPassword $adminPassword `
+                -publicIpName $publicIpName
+
+Write-Host "webFrontServerObjectId = $($webFrontServerObjectId)" -ForegroundColor Green
+
+

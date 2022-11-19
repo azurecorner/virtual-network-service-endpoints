@@ -16,7 +16,10 @@ Function NewVirtualMachine
       [parameter(Mandatory=$true)]
       [string]$adminUsername,
       [parameter(Mandatory=$true)]
-      [securestring]$adminPassword
+      [securestring]$adminPassword,
+      [parameter(Mandatory=$false)]
+      [string]$publicIpName
+
     ) 
 # Create a VM in the Public subnet 
   . {
@@ -30,17 +33,24 @@ Function NewVirtualMachine
       --nsg '""' `
       --admin-username $adminUsername --admin-password $adminPassword
 
+      if(-not ( [string]::IsNullOrEmpty($publicIpName ))) {
+        # Create a public ip address
+        az network public-ip create --name $publicIpName --resource-group $resourceGroupName --allocation-method Static
+        
+        az network nic ip-config update `
+          --name "ipconfig$($virtualMachineName)" `
+          --nic-name "$($virtualMachineName)VMNic" `
+          --resource-group $resourceGroupName `
+          --public-ip-address $publicIpName
+      }
+
       $id =(az vm show --name $virtualMachineName `
       --resource-group $resourceGroupName `
       --query 'networkProfile.networkInterfaces[].id' `
       --output tsv) 
-
-      $Return = $id
-
-      
-      Write-Host  $Return
+      Write-Host $id
       Return 
   
 } | Out-Null
-Return $Return
+Return $id
 }
