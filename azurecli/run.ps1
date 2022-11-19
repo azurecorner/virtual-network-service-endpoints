@@ -6,25 +6,33 @@ $location="westeurope"
 
 
 ############  IMPORT MODULES ######################
-Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewStorageAccount.ps1"
-Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewVirtualNetwork.ps1"
-Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewVirtualMachine.ps1"
-Import-Module "C:\Users\tocan\source\repos\CYBER SECURITY\virtual-network-service-endpoints\azurecli\modules\NewNetworkSecurityGroup.ps1"
+$curDir = Get-Location
+Write-Host "Current Working Directory: $curDir"
+
+Import-Module "$($curDir)\modules\NewStorageAccount.ps1"
+Import-Module "$($curDir)\modules\NewVirtualNetwork.ps1"
+Import-Module "$($curDir)\modules\NewVirtualMachine.ps1"
+Import-Module "$($curDir)\modules\NewNetworkSecurityGroup.ps1"
+Import-Module "$($curDir)\modules\NewKeyVault.ps1"
 #
 
 az group create `
   --name $resourceGroupName `
   --location $location
 
-  $curDir = Get-Location
-Write-Host "Current Working Directory: $curDir"
+
+##############################
+
+
+##################################
+
 
 <# Get-ChildItem -Path "$curDir/modules" -Include *.ps1  | Import-Module #>
   
 # Create storage account
- <# $ConnectionString = NewStorageAccount -resourceGroupName $resourceGroupName -storageAccountName $storageAccountName -fileShareName $fileShareName
+ $ConnectionString = NewStorageAccount -resourceGroupName $resourceGroupName -storageAccountName $storageAccountName -fileShareName $fileShareName
  Write-Host "ConnectionString = $($ConnectionString)" -ForegroundColor Green
-  #>
+ 
  
 $virtualNetworkName="logcorner-vnet"
 $addressPrefix     = "10.0.0.0/16"
@@ -41,16 +49,16 @@ $subnets = @"
 ]
 "@
 # CREATE VIRTUAL NEtWORK 
-<#  $logcornerVnet = NewVirtualNetwork -resourceGroupName $resourceGroupName `
+ $logcornerVnet = NewVirtualNetwork -resourceGroupName $resourceGroupName `
                   -virtualNetworkName $virtualNetworkName `
                   -addressPrefix $addressPrefix `
                   -subnets $subnets 
                 
-Write-Host "logcornerVnetId = $($logcornerVnet)" -ForegroundColor Green  #>
+Write-Host "logcornerVnetId = $($logcornerVnet)" -ForegroundColor Green 
 
 # CREATE VIRTUAL MACHINE  WEB API 
 
-<# $subnetName="webApiSubnet"
+$subnetName="webApiSubnet"
 $virtualMachineName ="webApiServer"
 $image = "Win2019Datacenter"
 $adminUsername = "webapisuperuser"
@@ -64,11 +72,11 @@ $webApiServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupName
                 -adminPassword $adminPassword
 
 Write-Host "webApiServerObjectId = $($webApiServerObjectId)" -ForegroundColor Green
- #>
+
 
 # CREATE VIRTUAL MACHINE  WEB FRONT END 
 
-<# $subnetName="webFrontSubnet"
+$subnetName="webFrontSubnet"
 $virtualMachineName ="webFrontServer"
 $image = "Win2019Datacenter"
 $adminUsername = "webfrontsuperuser"
@@ -84,13 +92,49 @@ $webFrontServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupNa
                 -publicIpName $publicIpName
 
 Write-Host "webFrontServerObjectId = $($webFrontServerObjectId)" -ForegroundColor Green
- #>
+
 
 # ASSIGN NSG TO  VIRTUAL MACHINE  WEB API 
 $webApiSubnetNSG="webApiSubnetNSG"
 $webApiSubnet="webApiSubnet"
 
+
 NewNetworkSecurityGroup  -resourceGroupName  $resourceGroupName `
 -virtualNetworkName  $virtualNetworkName `
 -subnetName $webApiSubnet `
--networkSecurityGroupName $webApiSubnetNSG
+-networkSecurityGroupName $webApiSubnetNSG 
+
+# ASSIGN NSG TO  VIRTUAL MACHINE  WEB API 
+$webFrontSubnetNSG="webFrontSubnetNSG"
+$webFrontSubnet="webFrontSubnet"
+
+NewNetworkSecurityGroup  -resourceGroupName  $resourceGroupName `
+-virtualNetworkName  $virtualNetworkName `
+-subnetName $webFrontSubnet `
+-networkSecurityGroupName $webFrontSubnetNSG 
+
+
+ # CREATE AZURE KEY VAULT
+$keyVaultName ="logcornervaulttore"
+$secrets = @"
+[
+  {
+    "name": "ConnectionString",
+    "value": "$ConnectionString"
+  }
+]
+"@
+
+$secretPermissions = @"
+[
+  {
+    "objectId": "$webApiServerObjectId",
+    "value": ["get" ,"list"]
+  }
+]
+"@
+
+NewKeyVault   -resourceGroupName  $resourceGroupName `
+            -keyVaultName   $keyVaultName `
+            -secrets   $secrets  `
+            -secretPermissions $secretPermissions   

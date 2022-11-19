@@ -25,3 +25,17 @@ az storage account network-rule add `
   --subnet $webApiSubnet
 
 
+  az network nsg rule create `
+    --resource-group $resourceGroupName `
+    --nsg-name $networkSecurityGroupName `
+    --name "Allow-Storage-All" `
+    --access Allow `
+    --protocol "*" `
+    --direction Outbound `
+    --priority 100 `
+    --source-address-prefix "VirtualNetwork" `
+    --source-port-range "*" `
+    --destination-address-prefix "Storage" `
+    --destination-port-range "*" `
+    --description "Allow access to Azure Storage"
+

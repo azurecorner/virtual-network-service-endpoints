@@ -44,13 +44,20 @@ Function NewVirtualMachine
           --public-ip-address $publicIpName
       }
 
-      $id =(az vm show --name $virtualMachineName `
+      # foreach ($item in $managedIdentities) {
+      #   az vm identity assign --name "webApiServer" --resource-group $resourceGroupName
+      # }
+
+     <#  $id =(az vm show --name $virtualMachineName `
       --resource-group $resourceGroupName `
       --query 'networkProfile.networkInterfaces[].id' `
-      --output tsv) 
-      Write-Host $id
+      --output tsv)  #>
+
+      $spId = $(az resource list -n $virtualMachineName --query [*].identity.principalId --out tsv)
+
+      Write-Host $spId
       Return 
   
 } | Out-Null
-Return $id
+Return $spId
 }

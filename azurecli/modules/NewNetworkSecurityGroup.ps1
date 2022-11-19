@@ -9,8 +9,15 @@ Function NewNetworkSecurityGroup
       [parameter(Mandatory=$true)]
       [string]$subnetName,
       [parameter(Mandatory=$true)]
-      [string]$networkSecurityGroupName
+      [string]$networkSecurityGroupName,
+      [parameter(Mandatory=$false)]
+      [Object]$nsgRules
     ) 
+
+    if($null -ne $nsgRules ) {
+      $nsgRules = $nsgRules | ConvertFrom-Json
+    }
+
     # Create a network security group  for database subnet
     az network nsg create `
     --resource-group $resourceGroupName `
@@ -25,7 +32,24 @@ Function NewNetworkSecurityGroup
 
     # rule that follows allows outbound access to the public IP addresses assigned to the Azure Storage service:
 
-    az network nsg rule create `
+    foreach ($item in $nsgRules) {
+
+      az network nsg rule create `
+      --resource-group $resourceGroupName `
+      --nsg-name $networkSecurityGroupName `
+      --name $item.name `
+      --access $item.access `
+      --protocol $item.protocol `
+      --direction $item.direction `
+      --priority $item.priority `
+      --source-address-prefix $item.sourceAddressPrefix `
+      --source-port-range $item.sourcePortRange `
+      --destination-address-prefix $item.destinationAddressPrefix `
+      --destination-port-range $item.destinationPortRange `
+      --description $item.description
+    }
+
+ <#    az network nsg rule create `
     --resource-group $resourceGroupName `
     --nsg-name $networkSecurityGroupName `
     --name "Allow-Storage-All" `
@@ -37,7 +61,7 @@ Function NewNetworkSecurityGroup
     --source-port-range "*" `
     --destination-address-prefix "Storage" `
     --destination-port-range "*" `
-    --description "Allow access to Azure Storage"
+    --description "Allow access to Azure Storage" #>
 
     # Create another outbound security rule that denies communication to the internet
 <# 
