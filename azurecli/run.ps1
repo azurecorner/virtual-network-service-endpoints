@@ -108,10 +108,32 @@ NewNetworkSecurityGroup  -resourceGroupName  $resourceGroupName `
 $webFrontSubnetNSG="webFrontSubnetNSG"
 $webFrontSubnet="webFrontSubnet"
 
+$nsgRules = @"
+[
+  {
+    "name": "Allow-Web-All",
+    "access": "Allow",
+    "protocol":"Tcp",
+    "direction":"Inbound",
+    "priority":100,
+    "sourceAddressPrefix":"*",
+    "sourcePortRange":"*",
+    "destinationAddressPrefix":"VirtualNetwork",
+    "destinationPortRange" : [
+      "80",
+      "443"                            
+  ] ,
+    "description":"Allow access to web site"
+
+  }
+]
+"@
+
 NewNetworkSecurityGroup  -resourceGroupName  $resourceGroupName `
 -virtualNetworkName  $virtualNetworkName `
 -subnetName $webFrontSubnet `
--networkSecurityGroupName $webFrontSubnetNSG 
+-networkSecurityGroupName $webFrontSubnetNSG  `
+-nsgRules  $nsgRules
 
 
  # CREATE AZURE KEY VAULT

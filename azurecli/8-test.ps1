@@ -1,17 +1,53 @@
-# retrieve the connection string for the storage account into a variable 
-$saConnectionString=$(az storage account show-connection-string `
-  --name $storageAcctName `
-  --resource-group myResourceGroup `
-  --query 'connectionString' `
-  --out tsv)
+############  VARIABLES ######################
+$resourceGroupName = "virtual-network-service-endpoints"
+$storageAccountName="logcorn7634733"
+$fileShareName="blog-file-share"
+$location="westeurope"
 
-  $storageAcctName="logcorner07092022"
-  $resourceGroup = "virtual-network-service-endpoints"
 
-  $saConnectionString = (Get-AzStorageAccount -ResourceGroupName  $resourceGroup -Name $storageAcctName).Context.ConnectionString
+############  IMPORT MODULES ######################
+$curDir = Get-Location
+Write-Host "Current Working Directory: $curDir"
 
-$acctKey = ConvertTo-SecureString -String $saConnectionString -AsPlainText -Force
+Import-Module "$($curDir)\modules\NewStorageAccount.ps1"
+Import-Module "$($curDir)\modules\NewVirtualNetwork.ps1"
+Import-Module "$($curDir)\modules\NewVirtualMachine.ps1"
+Import-Module "$($curDir)\modules\NewNetworkSecurityGroup.ps1"
+Import-Module "$($curDir)\modules\NewKeyVault.ps1"
+#
 
-$acctKey='DefaultEndpointsProtocol=https;AccountName=logcorner07092022;AccountKey=Q7Lu2aWiKfYlnc+61fE4iLpzQ8wt6ZoKO8WNTpIiNVvEk3OFMVWZO6K4aiIeO5uBJ2EJXK1/xTGU+AStQdxPfQ==;EndpointSuffix=core.windows.net'
-$credential = New-Object System.Management.Automation.PSCredential -ArgumentList "Azure\$storageAcctName", $acctKey
-New-PSDrive -Name Z -PSProvider FileSystem -Root "\\$storageAcctName.file.core.windows.net\my-file-share" -Credential $credential
+
+
+# ASSIGN NSG TO  VIRTUAL MACHINE  WEB SITE 
+$webFrontSubnetNSG="webFrontSubnetNSG"
+$webFrontSubnet="webFrontSubnet"
+$virtualNetworkName="logcorner-vnet"
+$port = '80 443';
+$nsgRules = @"
+[
+  {
+    "name": "Allow-Web-All",
+    "access": "Allow",
+    "protocol":"Tcp",
+    "direction":"Inbound",
+    "priority":100,
+    "sourceAddressPrefix":"*",
+    "sourcePortRange":"*",
+    "destinationAddressPrefix":"VirtualNetwork",
+    "destinationPortRange" : [
+      "80",
+      "443"                            
+  ] ,
+    "description":"Allow access to web site"
+
+  }
+]
+"@
+NewNetworkSecurityGroup  -resourceGroupName  $resourceGroupName `
+-virtualNetworkName  $virtualNetworkName `
+-subnetName $webFrontSubnet `
+-networkSecurityGroupName $webFrontSubnetNSG  `
+-nsgRules  $nsgRules
+
+
+ 

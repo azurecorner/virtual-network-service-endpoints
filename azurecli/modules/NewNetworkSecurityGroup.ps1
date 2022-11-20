@@ -49,33 +49,4 @@ Function NewNetworkSecurityGroup
       --description $item.description
     }
 
- <#    az network nsg rule create `
-    --resource-group $resourceGroupName `
-    --nsg-name $networkSecurityGroupName `
-    --name "Allow-Storage-All" `
-    --access Allow `
-    --protocol "*" `
-    --direction Outbound `
-    --priority 100 `
-    --source-address-prefix "VirtualNetwork" `
-    --source-port-range "*" `
-    --destination-address-prefix "Storage" `
-    --destination-port-range "*" `
-    --description "Allow access to Azure Storage" #>
-
-    # Create another outbound security rule that denies communication to the internet
-<# 
-    az network nsg rule create `
-    --resource-group $resourceGroupName `
-    --nsg-name $networkSecurityGroupName `
-    --name "Deny-Internet-All" `
-    --access Deny `
-    --protocol "*" `
-    --direction Outbound `
-    --priority 110 `
-    --source-address-prefix "VirtualNetwork" `
-    --source-port-range "*" `
-    --destination-address-prefix "Internet" `
-    --destination-port-range "*"  `
-    --description "Deny access to Internet." #>
-}
+ 
