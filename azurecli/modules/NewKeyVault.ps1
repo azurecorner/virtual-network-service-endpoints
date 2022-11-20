@@ -24,7 +24,7 @@ Function NewKeyVault
         $secretPermissions = $secretPermissions | ConvertFrom-Json
    
         foreach ($policy in $secretPermissions) {
-            az keyvault set-policy --name $keyVaultName  --object-id $policy.objectId --secret-permissions $policy.value
+            az keyvault set-policy --name $keyVaultName --resource-group $resourceGroupName --object-id $policy.objectId --secret-permissions $policy.value
         } 
    }
  }

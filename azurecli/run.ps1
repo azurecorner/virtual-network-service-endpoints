@@ -115,7 +115,7 @@ NewNetworkSecurityGroup  -resourceGroupName  $resourceGroupName `
 
 
  # CREATE AZURE KEY VAULT
-$keyVaultName ="logcornervaulttore"
+$keyVaultName ="logcornerdior"
 $secrets = @"
 [
   {

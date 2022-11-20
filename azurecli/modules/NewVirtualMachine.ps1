@@ -53,7 +53,7 @@ Function NewVirtualMachine
       --query 'networkProfile.networkInterfaces[].id' `
       --output tsv)  #>
 
-      $spId = $(az resource list -n $virtualMachineName --query [*].identity.principalId --out tsv)
+      $spId = $(az resource list -n $virtualMachineName --resource-group $resourceGroupName --resource-type "Microsoft.Compute/virtualMachines" --query [*].identity.principalId --out tsv)
 
       Write-Host $spId
       Return 
