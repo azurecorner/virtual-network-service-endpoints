@@ -15,11 +15,20 @@ Import-Module "$($curDir)\modules\NewNetworkSecurityGroup.ps1"
 Import-Module "$($curDir)\modules\NewKeyVault.ps1"
 Import-Module "$($curDir)\modules\NewBastionHost.ps1"
 #
-
+<# 
 NewBastionHost -resourceGroupName  $resourceGroupName `
                -virtualNetworkName  $virtualNetworkName  `
                -publicIpName  $publicIpName `
                -publicIpSku  $publicIpSku  `
-               -AzureBastionName  $AzureBastionName
+               -AzureBastionName  $AzureBastionName #>
     
     
+# CREATE VIRTUAL NEtWORK 
+
+
+
+az network vnet peering create -g $resourceGroupName -n MyVnet1ToMyVnet2 --vnet-name $virtualNetworkName   `
+--remote-vnet 'othervnet' --allow-vnet-access
+
+az network vnet peering create -g $resourceGroupName -n MyVnet2ToMyVnet1 --vnet-name 'othervnet'   `
+--remote-vnet $virtualNetworkName  --allow-vnet-access
