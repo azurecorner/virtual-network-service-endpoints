@@ -16,7 +16,8 @@ Function NewVirtualMachine
       [parameter(Mandatory=$true)]
       [string]$adminUsername,
       [parameter(Mandatory=$true)]
-      [securestring]$adminPassword,
+      # [securestring]$adminPassword,
+      [string]$adminPassword,
       [parameter(Mandatory=$false)]
       [string]$publicIpName
 

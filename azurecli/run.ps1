@@ -14,17 +14,12 @@ Import-Module "$($curDir)\modules\NewVirtualNetwork.ps1"
 Import-Module "$($curDir)\modules\NewVirtualMachine.ps1"
 Import-Module "$($curDir)\modules\NewNetworkSecurityGroup.ps1"
 Import-Module "$($curDir)\modules\NewKeyVault.ps1"
+Import-Module "$($curDir)\modules\NewBastionHost.ps1"
 #
 
 az group create `
   --name $resourceGroupName `
   --location $location
-
-
-##############################
-
-
-##################################
 
 
 <# Get-ChildItem -Path "$curDir/modules" -Include *.ps1  | Import-Module #>
@@ -48,7 +43,7 @@ $subnets = @"
   }
 ]
 "@
-# CREATE VIRTUAL NEtWORK 
+# CREATE VIRTUAL NETWORK 
  $logcornerVnet = NewVirtualNetwork -resourceGroupName $resourceGroupName `
                   -virtualNetworkName $virtualNetworkName `
                   -addressPrefix $addressPrefix `
@@ -62,7 +57,7 @@ $subnetName="webApiSubnet"
 $virtualMachineName ="webApiServer"
 $image = "Win2019Datacenter"
 $adminUsername = "webapisuperuser"
-$adminPassword = "Password123!" | ConvertTo-SecureString -AsPlainText -Force
+$adminPassword = "Password123!" #| ConvertTo-SecureString -AsPlainText -Force
 $webApiServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupName `
                 -virtualMachineName $virtualMachineName `
                 -virtualNetworkName $virtualNetworkName `
@@ -80,7 +75,7 @@ $subnetName="webFrontSubnet"
 $virtualMachineName ="webFrontServer"
 $image = "Win2019Datacenter"
 $adminUsername = "webfrontsuperuser"
-$adminPassword = "Password123!" | ConvertTo-SecureString -AsPlainText -Force
+$adminPassword = "Password123!" # | ConvertTo-SecureString -AsPlainText -Force
 $publicIpName = "webFrontServerIP"
 $webFrontServerObjectId =  NewVirtualMachine -resourceGroupName $resourceGroupName `
                 -virtualMachineName $virtualMachineName `
@@ -137,7 +132,7 @@ NewNetworkSecurityGroup  -resourceGroupName  $resourceGroupName `
 
 
  # CREATE AZURE KEY VAULT
-$keyVaultName ="logcornerdior"
+$keyVaultName ="logcornersecrets"
 $secrets = @"
 [
   {
@@ -160,3 +155,45 @@ NewKeyVault   -resourceGroupName  $resourceGroupName `
             -keyVaultName   $keyVaultName `
             -secrets   $secrets  `
             -secretPermissions $secretPermissions   
+
+          
+
+ ######################  MANGEMENT #####################################
+ # CREATE VIRTUAL NETWORK 
+$virtualNetworkManagementName="logcorner-management-vnet"
+$addressPrefix     = "10.1.0.0/16"
+$subnets = @"
+[
+  {
+    "name": "AzureBastionSubnet",
+    "addressPrefix": "10.1.2.0/24"
+  },
+  {
+    "name": "devOpsSubnet",
+    "addressPrefix": "10.1.1.0/24"
+  }
+]
+"@
+# CREATE VIRTUAL NETWORK 
+ $logcornerManagementVnet = NewVirtualNetwork -resourceGroupName $resourceGroupName `
+                  -virtualNetworkName $virtualNetworkName `
+                  -addressPrefix $addressPrefix `
+                  -subnets $subnets 
+Write-Host  $logcornerManagementVnet -BackgroundColor Green
+
+# CREATE VIRTUAL NETWORK PEERING
+az network vnet peering create -g $resourceGroupName -n Vnet1ToVnet2 --vnet-name $virtualNetworkName   `
+--remote-vnet $virtualNetworkManagementName --allow-vnet-access
+
+az network vnet peering create -g $resourceGroupName -n Vnet2ToVnet1 --vnet-name $virtualNetworkManagementName   `
+--remote-vnet $virtualNetworkName  --allow-vnet-access
+
+# CREATE AN AZURE BASTION 
+$publicIpName = "AzureBastionNamePip"
+$publicIpSku = "Standard"
+$AzureBastionName ="AzureBastionLogCorner"
+NewBastionHost -resourceGroupName  $resourceGroupName `
+               -virtualNetworkName  $virtualNetworkManagementName  `
+               -publicIpName  $publicIpName `
+               -publicIpSku  $publicIpSku  `
+               -AzureBastionName  $AzureBastionName
