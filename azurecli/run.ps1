@@ -176,7 +176,7 @@ $subnets = @"
 "@
 # CREATE VIRTUAL NETWORK 
  $logcornerManagementVnet = NewVirtualNetwork -resourceGroupName $resourceGroupName `
-                  -virtualNetworkName $virtualNetworkName `
+                  -virtualNetworkName $virtualNetworkManagementName `
                   -addressPrefix $addressPrefix `
                   -subnets $subnets 
 Write-Host  $logcornerManagementVnet -BackgroundColor Green
