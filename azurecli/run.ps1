@@ -15,6 +15,7 @@ Import-Module "$($curDir)\modules\NewVirtualMachine.ps1"
 Import-Module "$($curDir)\modules\NewNetworkSecurityGroup.ps1"
 Import-Module "$($curDir)\modules\NewKeyVault.ps1"
 Import-Module "$($curDir)\modules\NewBastionHost.ps1"
+Import-Module "$($curDir)\modules\NewVirtualNetworkServiceEndpoint.ps1"
 #
 
 az group create `
@@ -197,3 +198,18 @@ NewBastionHost -resourceGroupName  $resourceGroupName `
                -publicIpName  $publicIpName `
                -publicIpSku  $publicIpSku  `
                -AzureBastionName  $AzureBastionName
+
+
+
+
+# ENABLE VIRTUAL NETWORK SERVICE ENDPOINT
+$networkSecurityGroupName ="webApiSubnetNSG"
+$virtualNetworkName ="logcorner-vnet"
+$subnetName ="webApiSubnet"
+$storageAccountName ="logcorn7634733"
+NewVirtualNetworkServiceEndpoint  -resourceGroupName $resourceGroupName  `
+                                  -virtualNetworkName $virtualNetworkName   `
+                                  -networkSecurityGroupName $networkSecurityGroupName  `
+                                  -subnetName $subnetName  `
+                                  -storageAccountName $storageAccountName
+    
